@@ -1,0 +1,2778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mercury, Venus, Mars · Nebula Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Questrial&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════
+   DESIGN TOKENS
+   ════════════════════════════════════════════ */
+:root{
+  --navy:#0c1118;
+  --navy2:#141d2b;
+  --cream:#f0ebe0;
+  --cream-70:rgba(240,235,224,0.70);
+  --cream-40:rgba(240,235,224,0.40);
+  --cream-18:rgba(240,235,224,0.18);
+  --cream-10:rgba(240,235,224,0.10);
+  --cream-06:rgba(240,235,224,0.06);
+  --purple:#7B6FE8;
+  --purple-light:rgba(123,111,232,0.18);
+  --purple-dim:rgba(123,111,232,0.10);
+  --coral:#E8604C;
+  --cyan:#4FC3F7;
+  --magenta:#E040FB;
+  --green:#6FFFB0;
+  --gold:#FFD54F;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Questrial',sans-serif;
+  background:var(--navy);
+  color:var(--cream);
+  font-size:16px;
+  line-height:1.75;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* Subtle stars background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 20% 10%, rgba(240,235,224,0.4), transparent),
+    radial-gradient(1px 1px at 80% 30%, rgba(240,235,224,0.3), transparent),
+    radial-gradient(1px 1px at 35% 70%, rgba(240,235,224,0.3), transparent),
+    radial-gradient(1px 1px at 65% 85%, rgba(240,235,224,0.25), transparent),
+    radial-gradient(1px 1px at 90% 60%, rgba(240,235,224,0.35), transparent),
+    radial-gradient(1px 1px at 10% 50%, rgba(240,235,224,0.25), transparent),
+    radial-gradient(1.5px 1.5px at 50% 20%, rgba(240,235,224,0.45), transparent),
+    radial-gradient(1px 1px at 25% 90%, rgba(240,235,224,0.3), transparent);
+  background-size:100% 100%;
+  z-index:0;
+  animation:twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle{
+  from{opacity:.55}
+  to{opacity:1}
+}
+
+h1,h2,h3,.when-label,.ex-q{font-family:'Lora',serif}
+h1{font-size:clamp(2.4rem,6vw,4.5rem);line-height:1.05;font-weight:600;letter-spacing:-.02em}
+h2{font-size:clamp(1.7rem,3.5vw,2.7rem);line-height:1.15;font-weight:600;letter-spacing:-.01em;white-space:pre-line}
+h3{font-size:clamp(1.1rem,2vw,1.5rem);line-height:1.3;font-weight:600}
+
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ════════════════════════════════════════════
+   HEADER
+   ════════════════════════════════════════════ */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  background:rgba(12,17,24,0.65);
+  border-bottom:1px solid var(--cream-10);
+}
+.header-inner{
+  max-width:1240px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:18px 28px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.brand-mark svg{width:22px;height:22px}
+.brand-word{font-family:'Lora',serif;font-size:1.35rem;color:var(--cream);font-weight:600;letter-spacing:.01em}
+.brand-sep{width:1px;height:18px;background:var(--cream-40);margin:0 4px}
+.brand-tag{font-family:'Questrial',sans-serif;font-size:.95rem;color:var(--cream-70);letter-spacing:.04em}
+
+/* ════════════════════════════════════════════
+   SIDE NAV
+   ════════════════════════════════════════════ */
+.side-nav{
+  position:fixed;
+  right:22px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:30;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.side-nav button{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--cream-18);
+  transition:all .35s ease;
+  position:relative;
+}
+.side-nav button:hover{background:var(--cream-40)}
+.side-nav button.on{background:var(--purple);box-shadow:0 0 0 4px var(--purple-light)}
+.side-nav button::after{
+  content:attr(data-label);
+  position:absolute;
+  right:22px;top:50%;transform:translateY(-50%);
+  font-size:.72rem;letter-spacing:.06em;
+  color:var(--cream-70);
+  background:rgba(20,29,43,0.9);
+  padding:5px 10px;border-radius:6px;
+  white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease;
+}
+.side-nav button:hover::after{opacity:1}
+@media (max-width:900px){.side-nav{display:none}}
+
+/* ════════════════════════════════════════════
+   GENERAL LAYOUT
+   ════════════════════════════════════════════ */
+section{position:relative;z-index:1}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.eyebrow{
+  font-size:.78rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--cream-70);
+  margin-bottom:18px;
+  display:inline-block;
+}
+
+/* fade in */
+.fade{opacity:0;transform:translateY(28px);transition:opacity 1.05s ease, transform 1.05s ease}
+.fade.in{opacity:1;transform:none}
+
+/* blobs */
+.blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(70px);
+  opacity:.35;
+  pointer-events:none;
+  z-index:0;
+}
+.blob-purple-r{background:var(--purple);width:520px;height:520px;right:-160px;top:-100px}
+.blob-coral-r{background:var(--coral);width:420px;height:420px;right:14%;bottom:-120px;opacity:.22}
+.blob-coral-right{background:var(--coral);width:380px;height:380px;right:-120px;top:30%;opacity:.22}
+.blob-cyan-right{background:var(--cyan);width:380px;height:380px;right:-80px;top:10%;opacity:.20}
+.blob-green-left{background:var(--green);width:340px;height:340px;left:-100px;bottom:0;opacity:.18}
+.blob-gold-left{background:var(--gold);width:380px;height:380px;left:-110px;top:20%;opacity:.20}
+.blob-green-right{background:var(--green);width:380px;height:380px;right:-100px;bottom:0;opacity:.20}
+
+/* ════════════════════════════════════════════
+   HERO
+   ════════════════════════════════════════════ */
+#hero{
+  min-height:88vh;
+  display:flex;
+  align-items:center;
+  position:relative;
+  padding:90px 0 80px;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.1fr 1fr;
+  gap:60px;
+  align-items:center;
+  position:relative;
+  z-index:2;
+}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+}
+.hero-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 14px;
+  border:1px solid var(--cream-18);
+  border-radius:99px;
+  font-size:.8rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--cream-70);
+  margin-bottom:28px;
+  background:var(--cream-06);
+}
+.hero-tag .star{color:var(--gold);font-size:.95rem}
+.hero-lead{
+  margin-top:28px;
+  font-size:1.18rem;
+  color:var(--cream-70);
+  line-height:1.7;
+  max-width:580px;
+}
+
+/* hero deco — animated planets */
+.hero-deco{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  max-width:520px;
+  margin-left:auto;
+}
+.orbit{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:1px dashed var(--cream-18);
+  animation:orbit 60s linear infinite;
+}
+.orbit.o2{inset:14%;border-color:var(--cream-10);animation-duration:90s;animation-direction:reverse}
+.orbit.o3{inset:28%;border-color:var(--cream-10);animation-duration:120s}
+@keyframes orbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.planet{
+  position:absolute;
+  border-radius:50%;
+  filter:drop-shadow(0 0 30px currentColor);
+  animation:breathe 5s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.06)}
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+.planet-mercury{
+  top:10%;left:18%;
+  width:78px;height:78px;
+  color:var(--magenta);
+  background:radial-gradient(circle at 30% 30%, #f5b7ff 0%, #c64ad9 45%, #6b1f87 100%);
+  box-shadow:0 0 50px rgba(224,64,251,.55), inset -10px -14px 26px rgba(0,0,0,.45);
+  animation-delay:.2s;
+}
+.planet-venus{
+  top:48%;right:8%;
+  width:118px;height:118px;
+  color:var(--green);
+  background:radial-gradient(circle at 32% 28%, #fff4cf 0%, #f4c875 35%, #c08a3d 70%, #6b4716 100%);
+  box-shadow:0 0 70px rgba(255,213,79,.45), inset -14px -18px 36px rgba(0,0,0,.5);
+  animation-delay:.7s;
+}
+.planet-mars{
+  bottom:8%;left:8%;
+  width:96px;height:96px;
+  color:var(--coral);
+  background:radial-gradient(circle at 32% 30%, #ffb8a3 0%, #e8604c 45%, #7e1f0e 100%);
+  box-shadow:0 0 60px rgba(232,96,76,.55), inset -12px -16px 30px rgba(0,0,0,.45);
+  animation-delay:1.2s;
+}
+.planet-sun{
+  top:46%;left:46%;
+  width:60px;height:60px;
+  color:var(--gold);
+  background:radial-gradient(circle at 35% 30%, #fff8d8 0%, #ffd54f 45%, #b67800 100%);
+  box-shadow:0 0 80px rgba(255,213,79,.7), 0 0 120px rgba(255,213,79,.35);
+  animation:pulse 4s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1);box-shadow:0 0 80px rgba(255,213,79,.7),0 0 120px rgba(255,213,79,.35)}
+  50%{transform:scale(1.12);box-shadow:0 0 100px rgba(255,213,79,.85),0 0 160px rgba(255,213,79,.5)}
+}
+
+.planet-glyph{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols','Arial Unicode MS',serif;
+  font-style:normal;
+  font-weight:400;
+  color:var(--cream);
+  font-size:1.6rem;
+  text-shadow:0 0 14px rgba(0,0,0,.6);
+  pointer-events:none;
+  user-select:none;
+  line-height:1;
+}
+.planet-venus .planet-glyph{font-size:2.2rem}
+.planet-mars .planet-glyph{font-size:1.9rem}
+
+.deco-spark{
+  position:absolute;
+  color:var(--cream-40);
+  font-size:.9rem;
+  animation:float 4s ease-in-out infinite;
+}
+.deco-spark.s1{top:6%;right:30%;color:var(--gold);animation-delay:.3s}
+.deco-spark.s2{bottom:18%;right:30%;color:var(--cyan);animation-delay:.9s}
+.deco-spark.s3{top:38%;left:6%;color:var(--magenta);animation-delay:1.4s}
+
+/* ════════════════════════════════════════════
+   OVERVIEW (renamed: What awaits for you here)
+   ════════════════════════════════════════════ */
+#overview{padding:120px 0 90px}
+.overview-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:46px;
+}
+@media (max-width:700px){.overview-grid{grid-template-columns:1fr}}
+.ov-item{
+  position:relative;
+  padding:34px 30px;
+  border:1px solid var(--cream-10);
+  border-radius:18px;
+  background:linear-gradient(180deg, var(--cream-06), transparent);
+  cursor:pointer;
+  transition:transform .35s ease, border-color .35s ease, background .35s ease;
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-height:200px;
+  overflow:hidden;
+}
+.ov-item::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 100% 0%, var(--accent-dim,transparent), transparent 60%);
+  opacity:0;transition:opacity .35s ease;
+  pointer-events:none;
+}
+.ov-item:hover{transform:translateY(-4px);border-color:var(--accent,var(--cream-40))}
+.ov-item:hover::before{opacity:1}
+.ov-num{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1rem;
+  color:var(--accent,var(--cream-40));
+  letter-spacing:.04em;
+}
+.ov-label{
+  font-family:'Lora',serif;
+  font-size:1.5rem;
+  line-height:1.2;
+  margin-top:14px;
+  font-weight:600;
+}
+.ov-meta{
+  font-size:.92rem;
+  color:var(--cream-70);
+  margin-top:10px;
+  line-height:1.55;
+}
+.ov-arrow{
+  align-self:flex-end;
+  margin-top:24px;
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--cream-18);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .35s ease, border-color .35s ease, background .35s ease;
+  color:var(--accent,var(--cream-70));
+}
+.ov-item:hover .ov-arrow{transform:translate(4px,-4px);border-color:var(--accent);background:var(--cream-06)}
+
+.ov-magenta{--accent:var(--magenta);--accent-dim:rgba(224,64,251,.10)}
+.ov-purple{--accent:var(--purple);--accent-dim:rgba(123,111,232,.10)}
+.ov-gold{--accent:var(--gold);--accent-dim:rgba(255,213,79,.10)}
+.ov-coral{--accent:var(--coral);--accent-dim:rgba(232,96,76,.10)}
+
+/* ════════════════════════════════════════════
+   DIVIDER (full-width title slabs)
+   ════════════════════════════════════════════ */
+.div-block{
+  padding:140px 0 80px;
+  position:relative;
+  overflow:hidden;
+}
+.div-block h2{max-width:900px}
+
+/* ════════════════════════════════════════════
+   GENERIC SECTION
+   ════════════════════════════════════════════ */
+.sect{padding:60px 0 100px;position:relative}
+.sect h3{margin-top:6px;margin-bottom:28px}
+
+/* compare grid */
+.compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:36px;
+}
+@media (max-width:700px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{
+  padding:30px 28px;
+  border-radius:18px;
+  border:1px solid var(--cream-18);
+  background:var(--cream-06);
+  position:relative;
+}
+.compare-card .c-tag{
+  display:inline-block;
+  padding:5px 11px;
+  border-radius:99px;
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.compare-cyan .c-tag{background:rgba(79,195,247,.12);color:var(--cyan);border:1px solid rgba(79,195,247,.3)}
+.compare-green .c-tag{background:rgba(111,255,176,.10);color:var(--green);border:1px solid rgba(111,255,176,.3)}
+.compare-card p{font-size:1.04rem;color:var(--cream-70);line-height:1.65}
+.compare-card strong{color:var(--cream)}
+
+/* concept box */
+.concept-box{
+  margin-top:36px;
+  padding:34px 36px;
+  border-radius:20px;
+  border:1px solid var(--cream-18);
+  background:linear-gradient(180deg, var(--purple-dim), transparent);
+  position:relative;
+}
+.concept-box::before{
+  content:"✦";
+  position:absolute;
+  top:24px;left:24px;
+  color:var(--purple);
+  font-size:1.4rem;
+  opacity:.7;
+}
+.concept-box .c-quote{
+  padding-left:38px;
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1.25rem;
+  color:var(--cream);
+  line-height:1.55;
+}
+.concept-box .c-body{
+  margin-top:14px;
+  padding-left:38px;
+  color:var(--cream-70);
+  font-size:1rem;
+  line-height:1.7;
+}
+
+/* ════════════════════════════════════════════
+   PLANET SHOWCASE (Mercury, Venus, Mars)
+   ════════════════════════════════════════════ */
+.planet-showcase{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:60px;
+  align-items:center;
+  margin-top:30px;
+}
+@media (max-width:900px){
+  .planet-showcase{grid-template-columns:1fr;gap:40px}
+}
+.planet-stage{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;
+}
+.planet-big{
+  width:75%;
+  aspect-ratio:1/1;
+  border-radius:50%;
+  position:relative;
+  animation:breathe 6s ease-in-out infinite;
+}
+.planet-big::after{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  border-radius:50%;
+  background:radial-gradient(circle, var(--planet-glow,rgba(123,111,232,.25)) 0%, transparent 60%);
+  z-index:-1;
+  animation:pulse-glow 5s ease-in-out infinite;
+}
+@keyframes pulse-glow{
+  0%,100%{opacity:.55;transform:scale(1)}
+  50%{opacity:.95;transform:scale(1.08)}
+}
+.planet-big.mercury-big{
+  background:radial-gradient(circle at 30% 28%, #f6c5ff 0%, #d465ee 30%, #8a2aab 60%, #3e0e57 100%);
+  box-shadow:inset -22px -28px 56px rgba(0,0,0,.55), 0 0 80px rgba(224,64,251,.4);
+  --planet-glow:rgba(224,64,251,.30);
+}
+.planet-big.venus-big{
+  background:radial-gradient(circle at 32% 26%, #fff8d4 0%, #f4c875 28%, #c4862c 58%, #5a3c10 100%);
+  box-shadow:inset -22px -28px 60px rgba(0,0,0,.55), 0 0 100px rgba(255,213,79,.45);
+  --planet-glow:rgba(255,213,79,.35);
+}
+.planet-big.mars-big{
+  background:radial-gradient(circle at 30% 28%, #ffd5c5 0%, #ff7a5a 28%, #c43a1c 60%, #4a0f04 100%);
+  box-shadow:inset -22px -28px 56px rgba(0,0,0,.55), 0 0 100px rgba(232,96,76,.5);
+  --planet-glow:rgba(232,96,76,.35);
+}
+.planet-orbit-ring{
+  position:absolute;
+  inset:8%;
+  border:1px dashed var(--cream-18);
+  border-radius:50%;
+  animation:orbit 80s linear infinite;
+}
+.planet-orbit-ring.r2{inset:0;border-color:var(--cream-10);animation-duration:120s;animation-direction:reverse}
+.glyph-symbol{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols','Arial Unicode MS',serif;
+  font-style:normal;
+  font-weight:400;
+  font-size:3.4rem;
+  color:rgba(255,255,255,.9);
+  text-shadow:0 0 18px rgba(0,0,0,.6);
+  pointer-events:none;
+  line-height:1;
+}
+
+.planet-meta{display:flex;flex-direction:column;gap:14px}
+.meta-line{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 18px;
+  border-radius:12px;
+  background:var(--cream-06);
+  border:1px solid var(--cream-10);
+  transition:border-color .3s ease, background .3s ease;
+  cursor:pointer;
+  position:relative;
+}
+.meta-line:hover{border-color:var(--accent,var(--cream-40));background:var(--cream-10)}
+.meta-line.open{border-color:var(--accent);background:linear-gradient(180deg, var(--cream-10), var(--cream-06))}
+.meta-dot{
+  width:14px;height:14px;border-radius:50%;
+  flex-shrink:0;
+  margin-top:6px;
+  background:var(--accent,var(--cream-40));
+  box-shadow:0 0 12px var(--accent,var(--cream-40));
+}
+.meta-body{flex:1;display:flex;flex-direction:column;gap:0}
+.meta-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.meta-text{font-size:.98rem;color:var(--cream)}
+.meta-toggle{
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cream-40);
+  flex-shrink:0;
+  transition:color .25s ease;
+}
+.meta-line:hover .meta-toggle{color:var(--accent)}
+.meta-line.open .meta-toggle{color:var(--accent)}
+.meta-reveal{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .55s ease, margin-top .35s ease;
+  display:flex;
+  align-items:baseline;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.meta-line.open .meta-reveal{max-height:160px;margin-top:10px}
+.meta-pct{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1.7rem;
+  font-weight:600;
+  color:var(--accent);
+  text-shadow:0 0 18px var(--accent);
+  line-height:1;
+}
+.meta-note{
+  font-size:.88rem;
+  color:var(--cream-70);
+  font-style:italic;
+  font-family:'Lora',serif;
+  line-height:1.5;
+  flex:1;
+  min-width:200px;
+}
+.meta-line.acc-1{--accent:rgba(224,64,251,.4)}
+.meta-line.acc-2{--accent:rgba(224,64,251,.55)}
+.meta-line.acc-3{--accent:rgba(224,64,251,.7)}
+.meta-line.acc-4{--accent:rgba(224,64,251,.85)}
+.meta-line.acc-5{--accent:#E040FB}
+.meta-line.acc-6{--accent:#a92fc0}
+
+.meta-line.v-1{--accent:rgba(111,255,176,.35)}
+.meta-line.v-2{--accent:rgba(111,255,176,.5)}
+.meta-line.v-3{--accent:rgba(111,255,176,.65)}
+.meta-line.v-4{--accent:rgba(111,255,176,.8)}
+.meta-line.v-5{--accent:#6FFFB0}
+.meta-line.v-6{--accent:#3aaa6f}
+
+.meta-line.m-1{--accent:rgba(232,96,76,.35)}
+.meta-line.m-2{--accent:rgba(232,96,76,.5)}
+.meta-line.m-3{--accent:rgba(232,96,76,.65)}
+.meta-line.m-4{--accent:rgba(232,96,76,.85)}
+.meta-line.m-5{--accent:#E8604C}
+.meta-line.m-6{--accent:#9a2614}
+
+/* ex-cards: signs in the planet */
+.spread-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+  margin-top:40px;
+}
+@media (max-width:900px){.spread-grid{grid-template-columns:1fr;}}
+
+.pos{
+  border:1px solid var(--cream-10);
+  border-radius:18px;
+  padding:26px 24px;
+  background:var(--cream-06);
+  cursor:pointer;
+  transition:transform .35s ease, border-color .35s ease, background .35s ease;
+  position:relative;
+}
+.pos:hover{transform:translateY(-4px);border-color:var(--accent,var(--cream-40))}
+.pos.open{border-color:var(--accent);background:linear-gradient(180deg, var(--accent-dim), var(--cream-06))}
+.pos-glyph{
+  font-family:'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols','Arial Unicode MS',serif;
+  font-style:normal;
+  font-weight:400;
+  font-size:1.9rem;
+  display:block;
+  margin-bottom:14px;
+  line-height:1;
+}
+.pos-badge{
+  display:inline-block;
+  padding:5px 12px;
+  border-radius:99px;
+  font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:14px;
+  background:var(--accent-dim);
+  color:var(--accent);
+  border:1px solid var(--accent);
+}
+.pos h4{
+  font-family:'Lora',serif;
+  font-size:1.25rem;
+  margin-bottom:10px;
+  color:var(--cream);
+  font-weight:600;
+}
+.pos-hint{
+  font-size:.8rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream-40);
+  margin-top:14px;
+}
+.pos.open .pos-hint{color:var(--accent)}
+.pos-detail{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .55s ease, margin-top .35s ease;
+  font-size:.95rem;
+  color:var(--cream-70);
+  line-height:1.65;
+}
+.pos.open .pos-detail{max-height:400px;margin-top:14px}
+
+.pos-magenta{--accent:var(--magenta);--accent-dim:rgba(224,64,251,.10)}
+.pos-purple{--accent:var(--purple);--accent-dim:rgba(123,111,232,.12)}
+.pos-cyan{--accent:var(--cyan);--accent-dim:rgba(79,195,247,.10)}
+.pos-gold{--accent:var(--gold);--accent-dim:rgba(255,213,79,.10)}
+.pos-coral{--accent:var(--coral);--accent-dim:rgba(232,96,76,.10)}
+.pos-green{--accent:var(--green);--accent-dim:rgba(111,255,176,.10)}
+
+/* when-box */
+.when-box{
+  margin-top:40px;
+  padding:30px 32px;
+  border-radius:18px;
+  background:var(--cream-06);
+  border:1px solid var(--cream-10);
+}
+.when-label{
+  font-size:1.05rem;
+  letter-spacing:.06em;
+  font-style:italic;
+  color:var(--purple);
+  margin-bottom:14px;
+}
+.when-text{color:var(--cream-70);font-size:1rem;line-height:1.7}
+.signal-list{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+  margin-top:22px;
+}
+@media (max-width:700px){.signal-list{grid-template-columns:1fr}}
+.signal-quote{
+  padding:14px 16px;
+  border-left:2px solid var(--purple);
+  background:var(--purple-dim);
+  font-style:italic;
+  font-family:'Lora',serif;
+  color:var(--cream);
+  font-size:.95rem;
+  border-radius:0 10px 10px 0;
+  line-height:1.5;
+}
+
+/* ════════════════════════════════════════════
+   EXAMPLES (signs of each planet)
+   ════════════════════════════════════════════ */
+.ex-block{
+  margin-top:50px;
+  padding:36px;
+  border-radius:22px;
+  border:1px solid var(--cream-10);
+  background:linear-gradient(180deg, var(--cream-06), transparent);
+}
+.ex-q{
+  font-size:1.35rem;
+  font-style:italic;
+  color:var(--cream);
+  line-height:1.45;
+  margin-bottom:24px;
+}
+.ex-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+@media (max-width:900px){.ex-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:540px){.ex-grid{grid-template-columns:1fr}}
+
+.ex-card{
+  cursor:pointer;
+  border:1px solid var(--cream-10);
+  border-radius:16px;
+  background:var(--cream-06);
+  overflow:hidden;
+  transition:transform .35s ease, border-color .35s ease;
+  display:flex;flex-direction:column;
+}
+.ex-card:hover{transform:translateY(-4px);border-color:var(--accent,var(--cream-40))}
+.ex-card.open{border-color:var(--accent)}
+.ex-art{
+  aspect-ratio:3/3.8;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;
+  background:var(--art-grad,linear-gradient(160deg, var(--cream-10), var(--cream-06)));
+  position:relative;
+  text-align:center;
+  padding:24px 16px;
+}
+.ex-art .ex-emoji{
+  font-size:2.4rem;
+  filter:drop-shadow(0 0 16px var(--accent,rgba(255,255,255,.5)));
+  animation:float 4s ease-in-out infinite;
+}
+.ex-art .ex-name{
+  font-family:'Lora',serif;
+  font-size:1.15rem;
+  color:var(--cream);
+  font-weight:600;
+  line-height:1.25;
+}
+.ex-art .pos-badge{margin:0}
+.ex-hint{
+  font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cream-40);
+  text-align:center;
+  padding:14px;
+  border-top:1px solid var(--cream-10);
+}
+.ex-card.open .ex-hint{color:var(--accent)}
+.ex-info{
+  display:none;
+  padding:18px 20px 22px;
+  border-top:1px solid var(--cream-10);
+  font-size:.92rem;
+  color:var(--cream-70);
+  line-height:1.65;
+}
+.ex-info strong{color:var(--cream);font-family:'Lora',serif;font-style:italic;font-weight:600}
+.ex-card.open .ex-info{display:block}
+
+.art-magenta{--art-grad:linear-gradient(160deg,#3a0e5a,#1c051f);--accent:var(--magenta)}
+.art-purple{--art-grad:linear-gradient(160deg,#1f1a4a,#0f0a2a);--accent:var(--purple)}
+.art-cyan{--art-grad:linear-gradient(160deg,#0d3a4f,#051a26);--accent:var(--cyan)}
+.art-gold{--art-grad:linear-gradient(160deg,#3d2f0a,#1a1306);--accent:var(--gold)}
+.art-coral{--art-grad:linear-gradient(160deg,#3f1108,#1c0604);--accent:var(--coral)}
+.art-green{--art-grad:linear-gradient(160deg,#0d3a25,#04190f);--accent:var(--green)}
+
+/* synth */
+.synth-btn{
+  margin-top:26px;
+  padding:13px 22px;
+  border-radius:99px;
+  border:1px solid var(--purple);
+  background:var(--purple-dim);
+  color:var(--cream);
+  font-size:.85rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:10px;
+  transition:background .3s ease, transform .25s ease;
+}
+.synth-btn:hover{background:var(--purple-light)}
+.synth-btn .arr{transition:transform .35s ease;display:inline-block}
+.synth-btn.shown .arr{transform:rotate(90deg)}
+.synth-box{
+  max-height:0;overflow:hidden;
+  transition:max-height .6s ease, margin-top .35s ease, padding .35s ease;
+  background:linear-gradient(180deg, var(--purple-dim), transparent);
+  border-radius:14px;
+  border:1px solid transparent;
+}
+.synth-box.vis{
+  max-height:600px;margin-top:18px;
+  padding:22px 24px;
+  border-color:var(--purple-light);
+}
+.synth-box .synth-text{font-size:.98rem;color:var(--cream);line-height:1.7}
+.synth-box .synth-text em{color:var(--purple);font-style:italic;font-family:'Lora',serif}
+
+/* ════════════════════════════════════════════
+   PRACTICE SECTION
+   ════════════════════════════════════════════ */
+.practice-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 14px;
+  border:1px solid var(--purple);
+  background:var(--purple-dim);
+  border-radius:99px;
+  font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--purple);
+  margin-bottom:18px;
+}
+.lab-block{
+  margin-top:46px;
+  border-radius:22px;
+  border:1px solid var(--cream-10);
+  background:linear-gradient(180deg, var(--cream-06), transparent);
+  padding:36px 32px;
+  position:relative;
+}
+.lab-num{
+  display:inline-block;
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:.95rem;
+  color:var(--purple);
+  letter-spacing:.06em;
+  margin-bottom:8px;
+}
+.lab-block h3{margin-bottom:10px}
+.lab-intro{color:var(--cream-70);font-size:1rem;line-height:1.7;max-width:760px}
+
+/* Lab 1: Decode the Behavior */
+.scenario-list{display:flex;flex-direction:column;gap:18px;margin-top:30px}
+.scenario{
+  border:1px solid var(--cream-10);
+  border-radius:16px;
+  padding:22px 24px;
+  background:var(--cream-06);
+  transition:border-color .3s ease;
+}
+.scenario.solved{border-color:var(--purple)}
+.scenario-q{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1.08rem;
+  color:var(--cream);
+  line-height:1.55;
+  margin-bottom:16px;
+}
+.scenario-options{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:0}
+.opt-btn{
+  padding:9px 18px;
+  border-radius:99px;
+  border:1px solid var(--cream-18);
+  background:var(--cream-06);
+  font-size:.84rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cream-70);
+  transition:all .3s ease;
+}
+.opt-btn:hover{border-color:var(--cream-40);color:var(--cream)}
+.opt-btn[data-planet="mercury"]:hover{border-color:var(--magenta);color:var(--magenta);background:rgba(224,64,251,.08)}
+.opt-btn[data-planet="venus"]:hover{border-color:var(--green);color:var(--green);background:rgba(111,255,176,.08)}
+.opt-btn[data-planet="mars"]:hover{border-color:var(--coral);color:var(--coral);background:rgba(232,96,76,.08)}
+.opt-btn.correct{
+  border-color:var(--green);
+  color:var(--green);
+  background:rgba(111,255,176,.10);
+}
+.opt-btn.wrong{
+  border-color:var(--coral);
+  color:var(--coral);
+  background:rgba(232,96,76,.08);
+  opacity:.7;
+}
+.opt-btn.locked{pointer-events:none;opacity:.5}
+.opt-btn.locked.correct,.opt-btn.locked.wrong{opacity:1}
+.scenario-feedback{
+  display:none;
+  margin-top:16px;
+  padding:14px 18px;
+  border-radius:12px;
+  background:var(--purple-dim);
+  border-left:3px solid var(--purple);
+  font-size:.94rem;
+  color:var(--cream);
+  line-height:1.6;
+}
+.scenario.solved .scenario-feedback{display:block}
+.scenario-feedback strong{color:var(--purple);font-family:'Lora',serif;font-style:italic}
+
+/* Lab 2: Reflection mirror */
+.mirror-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:30px;
+}
+@media (max-width:900px){.mirror-grid{grid-template-columns:1fr}}
+.mirror-card{
+  padding:26px 24px;
+  border-radius:18px;
+  border:1px solid var(--cream-10);
+  background:var(--cream-06);
+  transition:border-color .3s ease, transform .3s ease;
+  cursor:pointer;
+  position:relative;
+  min-height:200px;
+  display:flex;flex-direction:column;
+}
+.mirror-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.mirror-card.flipped{border-color:var(--accent)}
+.mirror-icon{
+  width:48px;height:48px;border-radius:50%;
+  margin-bottom:14px;
+  background:var(--mirror-grad);
+  box-shadow:0 0 24px var(--accent);
+  position:relative;
+  flex-shrink:0;
+  animation:breathe 5s ease-in-out infinite;
+}
+.mirror-card h4{
+  font-family:'Lora',serif;
+  font-size:1.1rem;
+  color:var(--cream);
+  margin-bottom:10px;
+  font-weight:600;
+}
+.mirror-prompt{
+  font-style:italic;
+  color:var(--cream-70);
+  font-size:.95rem;
+  line-height:1.6;
+  font-family:'Lora',serif;
+}
+.mirror-reveal{
+  display:none;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--cream-10);
+  font-size:.92rem;
+  color:var(--cream);
+  line-height:1.65;
+}
+.mirror-card.flipped .mirror-reveal{display:block}
+.mirror-tap{
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cream-40);
+  margin-top:auto;
+  padding-top:14px;
+}
+.mirror-card.flipped .mirror-tap{color:var(--accent)}
+.m-mercury{--accent:var(--magenta);--mirror-grad:radial-gradient(circle at 30% 30%, #f5b7ff, #c64ad9, #6b1f87)}
+.m-venus{--accent:var(--gold);--mirror-grad:radial-gradient(circle at 30% 30%, #fff4cf, #f4c875, #c08a3d)}
+.m-mars{--accent:var(--coral);--mirror-grad:radial-gradient(circle at 30% 30%, #ffb8a3, #e8604c, #7e1f0e)}
+
+/* Lab 3: Build your trio */
+.trio-builder{
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:20px;
+}
+@media (max-width:900px){.trio-builder{grid-template-columns:1fr}}
+.trio-col{
+  padding:24px 22px;
+  border-radius:18px;
+  border:1px solid var(--cream-10);
+  background:var(--cream-06);
+}
+.trio-col h4{
+  font-family:'Lora',serif;
+  font-size:1.15rem;
+  color:var(--accent);
+  font-weight:600;
+  margin-bottom:6px;
+}
+.trio-col .trio-sub{
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream-40);
+  margin-bottom:18px;
+}
+.trio-options{display:flex;flex-direction:column;gap:8px}
+.trio-opt{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid var(--cream-10);
+  background:transparent;
+  color:var(--cream-70);
+  font-size:.92rem;
+  text-align:left;
+  transition:all .25s ease;
+  cursor:pointer;
+}
+.trio-opt:hover{color:var(--cream);border-color:var(--cream-40)}
+.trio-opt.selected{
+  background:var(--accent-dim);
+  border-color:var(--accent);
+  color:var(--cream);
+}
+.trio-mer{--accent:var(--magenta);--accent-dim:rgba(224,64,251,.12)}
+.trio-ven{--accent:var(--gold);--accent-dim:rgba(255,213,79,.12)}
+.trio-mar{--accent:var(--coral);--accent-dim:rgba(232,96,76,.12)}
+
+.trio-result{
+  margin-top:30px;
+  padding:30px 32px;
+  border-radius:18px;
+  border:1px solid transparent;
+  background:linear-gradient(180deg, var(--purple-dim), transparent);
+  min-height:120px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  transition:all .4s ease;
+}
+.trio-result.empty{
+  color:var(--cream-40);
+  font-style:italic;
+  font-family:'Lora',serif;
+  border-color:var(--cream-10);
+  background:var(--cream-06);
+}
+.trio-result.full{
+  border-color:var(--purple-light);
+  background:linear-gradient(180deg, var(--purple-light), var(--cream-06));
+}
+.trio-headline{
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1.15rem;
+  color:var(--cream);
+  line-height:1.55;
+  max-width:780px;
+}
+.trio-headline em{color:var(--purple);font-weight:600;font-style:italic}
+
+/* Lab 4: Match-the-pair (Venus & Mars dynamics) */
+.pair-grid{
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+@media (max-width:700px){.pair-grid{grid-template-columns:1fr}}
+.pair-side{
+  padding:22px 24px;
+  border-radius:18px;
+  border:1px solid var(--cream-10);
+  background:var(--cream-06);
+}
+.pair-side h4{
+  font-family:'Lora',serif;
+  font-size:1.1rem;
+  margin-bottom:14px;
+  color:var(--accent);
+  font-weight:600;
+}
+.pair-side.pair-v{--accent:var(--gold)}
+.pair-side.pair-m{--accent:var(--coral)}
+.pair-list{display:flex;flex-direction:column;gap:10px}
+.pair-chip{
+  padding:11px 14px;
+  border-radius:10px;
+  border:1px solid var(--cream-10);
+  font-size:.92rem;
+  color:var(--cream-70);
+  cursor:pointer;
+  transition:all .3s ease;
+  position:relative;
+}
+.pair-chip:hover{color:var(--cream);border-color:var(--cream-40)}
+.pair-chip.active{
+  border-color:var(--accent);
+  background:var(--accent-dim);
+  color:var(--cream);
+}
+.pair-chip.matched{
+  border-color:var(--green);
+  background:rgba(111,255,176,.10);
+  color:var(--cream);
+  pointer-events:none;
+}
+.pair-v .pair-chip{--accent:var(--gold);--accent-dim:rgba(255,213,79,.12)}
+.pair-m .pair-chip{--accent:var(--coral);--accent-dim:rgba(232,96,76,.12)}
+.pair-output{
+  margin-top:24px;
+  min-height:60px;
+  padding:18px 22px;
+  border-radius:14px;
+  border:1px solid var(--cream-10);
+  background:var(--cream-06);
+  font-size:.94rem;
+  color:var(--cream-70);
+  font-style:italic;
+  line-height:1.6;
+  font-family:'Lora',serif;
+  text-align:center;
+}
+.pair-output.success{
+  border-color:var(--green);
+  background:rgba(111,255,176,.08);
+  color:var(--cream);
+}
+.pair-progress{
+  margin-top:14px;
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream-40);
+  text-align:center;
+}
+
+/* ════════════════════════════════════════════
+   LAB 5 · DRAG & DROP
+   ════════════════════════════════════════════ */
+.drop-pool{
+  margin-top:30px;
+  padding:24px 22px;
+  border-radius:16px;
+  border:1px dashed var(--cream-18);
+  background:var(--cream-06);
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  min-height:88px;
+  transition:border-color .3s ease, background .3s ease;
+}
+.drop-pool.empty{
+  align-items:center;justify-content:center;
+  color:var(--cream-40);
+  font-style:italic;
+  font-family:'Lora',serif;
+  font-size:.92rem;
+  border-style:solid;
+}
+.drop-pool-label{
+  width:100%;
+  font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cream-40);
+  margin-bottom:4px;
+}
+.drag-chip{
+  padding:10px 14px;
+  border-radius:99px;
+  border:1px solid var(--cream-18);
+  background:var(--cream-10);
+  color:var(--cream);
+  font-size:.88rem;
+  cursor:grab;
+  user-select:none;
+  transition:all .2s ease;
+  font-family:'Lora',serif;
+  font-style:italic;
+  line-height:1.3;
+  max-width:100%;
+}
+.drag-chip:hover{border-color:var(--purple);background:var(--purple-dim);transform:translateY(-2px)}
+.drag-chip:active{cursor:grabbing}
+.drag-chip.dragging{opacity:.45;transform:scale(.96)}
+.drag-chip.placed{
+  cursor:default;
+  background:rgba(111,255,176,.10);
+  border-color:var(--green);
+  color:var(--cream);
+}
+.drag-chip.shake{animation:shake .45s ease}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-5px)}
+  80%{transform:translateX(5px)}
+}
+
+.drop-targets{
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+@media (max-width:900px){.drop-targets{grid-template-columns:1fr}}
+
+.drop-zone{
+  border:1px dashed var(--cream-18);
+  border-radius:18px;
+  padding:24px 22px;
+  background:var(--cream-06);
+  transition:border-color .3s ease, background .3s ease, transform .3s ease;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  min-height:280px;
+}
+.drop-zone.over{
+  border-color:var(--accent);
+  background:var(--accent-dim);
+  border-style:solid;
+  transform:translateY(-3px);
+}
+.drop-zone .zone-planet{
+  width:88px;height:88px;
+  border-radius:50%;
+  position:relative;
+  margin-bottom:14px;
+  animation:breathe 5s ease-in-out infinite;
+  box-shadow:inset -10px -14px 28px rgba(0,0,0,.55);
+}
+.drop-zone .zone-planet::after{
+  content:"";
+  position:absolute;
+  inset:-26%;
+  border-radius:50%;
+  background:radial-gradient(circle, var(--zone-glow,transparent) 0%, transparent 65%);
+  z-index:-1;
+  animation:pulse-glow 5s ease-in-out infinite;
+}
+.drop-zone .zone-planet .glyph-symbol{
+  font-size:1.9rem;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+}
+.zone-mercury{--accent:var(--magenta);--accent-dim:rgba(224,64,251,.10);--zone-glow:rgba(224,64,251,.30)}
+.zone-mercury .zone-planet{background:radial-gradient(circle at 30% 28%, #f6c5ff 0%, #d465ee 30%, #8a2aab 60%, #3e0e57 100%)}
+.zone-venus{--accent:var(--gold);--accent-dim:rgba(255,213,79,.10);--zone-glow:rgba(255,213,79,.30)}
+.zone-venus .zone-planet{background:radial-gradient(circle at 32% 26%, #fff8d4 0%, #f4c875 28%, #c4862c 58%, #5a3c10 100%)}
+.zone-mars{--accent:var(--coral);--accent-dim:rgba(232,96,76,.10);--zone-glow:rgba(232,96,76,.30)}
+.zone-mars .zone-planet{background:radial-gradient(circle at 30% 28%, #ffd5c5 0%, #ff7a5a 28%, #c43a1c 60%, #4a0f04 100%)}
+
+.drop-zone h4{
+  font-family:'Lora',serif;
+  font-size:1.2rem;
+  color:var(--accent);
+  font-weight:600;
+  margin-bottom:4px;
+}
+.zone-sub{
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--cream-40);
+  margin-bottom:14px;
+}
+.zone-list{
+  width:100%;
+  display:flex;flex-direction:column;
+  gap:8px;
+  min-height:60px;
+}
+.zone-list .drag-chip{
+  background:rgba(111,255,176,.08);
+  border-color:var(--green);
+  font-size:.84rem;
+  cursor:default;
+}
+.drop-feedback{
+  margin-top:22px;
+  text-align:center;
+  font-family:'Lora',serif;
+  font-style:italic;
+  color:var(--cream-70);
+  font-size:.95rem;
+  min-height:24px;
+}
+.drop-feedback.success{color:var(--green)}
+.drop-feedback.error{color:var(--coral)}
+.drop-progress{
+  margin-top:10px;
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream-40);
+  text-align:center;
+}
+
+/* ════════════════════════════════════════════
+   CONVERGENCE · the soul
+   ════════════════════════════════════════════ */
+#convergence{
+  padding:160px 0 140px;
+  position:relative;
+  overflow:hidden;
+}
+.conv-intro{
+  text-align:center;
+  max-width:720px;
+  margin:0 auto 50px;
+}
+.conv-intro h2{
+  margin-top:18px;
+  white-space:pre-line;
+}
+.conv-lead{
+  margin-top:26px;
+  color:var(--cream-70);
+  font-size:1.1rem;
+  line-height:1.7;
+}
+.conv-lead em{
+  color:var(--purple);
+  font-style:italic;
+  font-family:'Lora',serif;
+  font-weight:600;
+}
+.convergence-stage{
+  position:relative;
+  max-width:880px;
+  margin:0 auto;
+}
+.convergence-svg{
+  width:100%;
+  height:auto;
+  display:block;
+  overflow:visible;
+}
+.conv-coda{
+  text-align:center;
+  font-family:'Lora',serif;
+  font-style:italic;
+  font-size:1.2rem;
+  color:var(--cream);
+  margin:50px auto 0;
+  max-width:600px;
+  line-height:1.55;
+}
+.conv-coda em{
+  color:var(--purple);
+  font-style:italic;
+  font-weight:600;
+}
+
+/* SVG element animations */
+.soul-aura{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:soulPulse 5s ease-in-out infinite;
+}
+@keyframes soulPulse{
+  0%,100%{opacity:.8;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.08)}
+}
+.soul-core{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:coreBeat 2.6s ease-in-out infinite;
+  filter:drop-shadow(0 0 18px #fff) drop-shadow(0 0 36px #7B6FE8);
+}
+@keyframes coreBeat{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.18)}
+}
+.svg-planet{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:breatheSvg 5s ease-in-out infinite;
+}
+.svg-planet.p-mercury{animation-delay:.2s}
+.svg-planet.p-venus{animation-delay:1.0s}
+.svg-planet.p-mars{animation-delay:1.8s}
+@keyframes breatheSvg{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.06)}
+}
+.stream{
+  stroke-dasharray:900;
+  stroke-dashoffset:900;
+  animation:streamDraw 2.4s .4s ease-out forwards;
+}
+@keyframes streamDraw{
+  to{stroke-dashoffset:0}
+}
+.conv-label{
+  font-family:'Questrial',sans-serif;
+  letter-spacing:.3em;
+}
+.conv-sublabel{
+  font-family:'Lora',serif;
+  font-style:italic;
+}
+.bg-spark{
+  animation:sparkTwinkle 3.5s ease-in-out infinite;
+  transform-box:fill-box;
+  transform-origin:center;
+}
+@keyframes sparkTwinkle{
+  0%,100%{opacity:.25;transform:scale(1)}
+  50%{opacity:.9;transform:scale(1.3)}
+}
+
+/* ════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════ */
+.site-footer{
+  margin-top:80px;
+  padding:42px 28px 38px;
+  border-top:1px solid var(--cream-10);
+  text-align:center;
+  color:var(--cream-40);
+  font-size:.85rem;
+  letter-spacing:.06em;
+  position:relative;z-index:1;
+}
+
+/* responsive tweaks */
+@media (max-width:640px){
+  .header-inner{padding:14px 18px}
+  .wrap{padding:0 18px}
+  .ex-block{padding:24px}
+  .lab-block{padding:26px 22px}
+  .concept-box{padding:24px 22px}
+  .concept-box .c-quote, .concept-box .c-body{padding-left:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDE NAV -->
+<nav class="side-nav" aria-label="Section navigation">
+  <button onclick="goToSection('hero')" data-label="Intro" data-i="0"></button>
+  <button onclick="goToSection('overview')" data-label="What awaits" data-i="1"></button>
+  <button onclick="goToSection('what-are')" data-label="Personal Planets" data-i="2"></button>
+  <button onclick="goToSection('mercury')" data-label="Mercury" data-i="3"></button>
+  <button onclick="goToSection('venus')" data-label="Venus" data-i="4"></button>
+  <button onclick="goToSection('mars')" data-label="Mars" data-i="5"></button>
+  <button onclick="goToSection('practice')" data-label="Practice" data-i="6"></button>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     S1 · HERO
+     ════════════════════════════════════════════ -->
+<section id="hero">
+  <span class="blob blob-purple-r"></span>
+  <span class="blob blob-coral-r"></span>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="fade">
+        <span class="hero-tag"><span class="star">✦</span> Module · Personal Planets</span>
+        <h1>Mercury,<br/>Venus, Mars</h1>
+        <p class="hero-lead">
+          The closest layer of the natal chart — the planets you live with every day. Mercury shows how you think and speak. Venus shows what you value and how you love. Mars shows how you act and pursue. Together they form the practical foundation of personality expression in everyday life.
+        </p>
+      </div>
+
+      <div class="hero-deco fade">
+        <div class="orbit"></div>
+        <div class="orbit o2"></div>
+        <div class="orbit o3"></div>
+        <div class="planet planet-mercury"><span class="planet-glyph">☿</span></div>
+        <div class="planet planet-venus"><span class="planet-glyph">♀</span></div>
+        <div class="planet planet-mars"><span class="planet-glyph">♂</span></div>
+        <span class="deco-spark s1">✦</span>
+        <span class="deco-spark s2">✧</span>
+        <span class="deco-spark s3">✦</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     S2 · WHAT AWAITS FOR YOU HERE (overview)
+     ════════════════════════════════════════════ -->
+<section id="overview">
+  <div class="wrap">
+    <div class="fade">
+      <span class="eyebrow">In this module</span>
+      <h2>What awaits for you here</h2>
+    </div>
+    <div class="overview-grid">
+      <div class="ov-item ov-magenta fade" onclick="goToSection('what-are')">
+        <div>
+          <div class="ov-num">01</div>
+          <div class="ov-label">What are personal planets</div>
+          <div class="ov-meta">The most personal layer of the chart — what makes daily life feel like <em>you</em>.</div>
+        </div>
+        <div class="ov-arrow">→</div>
+      </div>
+      <div class="ov-item ov-purple fade" onclick="goToSection('mercury')">
+        <div>
+          <div class="ov-num">02</div>
+          <div class="ov-label">Mercury · Thinking & Communication</div>
+          <div class="ov-meta">How you process information, talk, learn, and decide.</div>
+        </div>
+        <div class="ov-arrow">→</div>
+      </div>
+      <div class="ov-item ov-gold fade" onclick="goToSection('venus')">
+        <div>
+          <div class="ov-num">03</div>
+          <div class="ov-label">Venus · Values & Love</div>
+          <div class="ov-meta">What you find beautiful, how you connect, and what feels like <em>yours</em>.</div>
+        </div>
+        <div class="ov-arrow">→</div>
+      </div>
+      <div class="ov-item ov-coral fade" onclick="goToSection('mars')">
+        <div>
+          <div class="ov-num">04</div>
+          <div class="ov-label">Mars · Action & Drive</div>
+          <div class="ov-meta">How you take initiative, defend boundaries, and pursue what you want.</div>
+        </div>
+        <div class="ov-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     S3 DIVIDER · WHAT ARE PERSONAL PLANETS
+     ════════════════════════════════════════════ -->
+<section id="what-are" class="div-block">
+  <span class="blob blob-coral-right"></span>
+  <div class="wrap">
+    <h2 class="fade">What are<br/>Personal Planets</h2>
+  </div>
+</section>
+
+<!-- S3a · The difference -->
+<section class="sect">
+  <div class="wrap">
+    <div class="fade">
+      <span class="eyebrow">Section 01 · The difference</span>
+      <h3>Personal vs. distant</h3>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card compare-cyan fade">
+        <span class="c-tag">Outer planets</span>
+        <p><strong>Generational, slow, abstract.</strong> Jupiter, Saturn, Uranus, Neptune, Pluto move through long cycles. They shape worldviews, eras, and inner transformation — but rarely your morning conversation.</p>
+      </div>
+      <div class="compare-card compare-green fade">
+        <span class="c-tag">Personal planets</span>
+        <p><strong>Daily, practical, immediate.</strong> Mercury, Venus, Mars (with the Sun and Moon) are the planets you live with every hour. They describe how you actually think, relate, and act in real situations.</p>
+      </div>
+    </div>
+
+    <div class="concept-box fade">
+      <div class="c-quote">Outer planets describe your weather. Personal planets describe how you walk in it.</div>
+      <div class="c-body">This is the level of astrology that is most visible in real life, because it explains how a person behaves in ordinary situations, without long-term reflection or abstraction.</div>
+    </div>
+  </div>
+</section>
+
+<!-- S3b · Three planets, one personality -->
+<section class="sect">
+  <div class="wrap">
+    <div class="fade">
+      <span class="eyebrow">The core idea</span>
+      <h3>Three planets. One personality.</h3>
+    </div>
+    <div class="concept-box fade">
+      <div class="c-quote">Mercury thinks it. Venus values it. Mars does it.</div>
+      <div class="c-body">Each planet plays a distinct role in the structure of daily behavior. Mercury moves the mind. Venus moves the heart toward what attracts it. Mars moves the body into action. Read alone, each tells a fragment. Read together, they explain why a person responds to life the way they do.</div>
+    </div>
+
+    <!-- Spread-style: 3 cards introducing the trio -->
+    <div class="spread-grid">
+      <div id="pos-mer" class="pos pos-magenta fade" onclick="togglePos('mer')" role="button" tabindex="0" aria-expanded="false">
+        <span class="pos-glyph">☿</span>
+        <span class="pos-badge">Mercury</span>
+        <h4>How you think</h4>
+        <div class="pos-detail">The mental layer — speech, writing, learning, decision-making. Mercury shows the speed and shape of your inner dialogue and how you translate experience into language.</div>
+        <div class="pos-hint">Tap to expand</div>
+      </div>
+      <div id="pos-ven" class="pos pos-gold fade" onclick="togglePos('ven')" role="button" tabindex="0" aria-expanded="false">
+        <span class="pos-glyph">♀</span>
+        <span class="pos-badge">Venus</span>
+        <h4>What you value</h4>
+        <div class="pos-detail">The relational layer — taste, attraction, beauty, money, comfort. Venus shows what feels pleasant, who you are drawn to, and the ways you create harmony around you.</div>
+        <div class="pos-hint">Tap to expand</div>
+      </div>
+      <div id="pos-mar" class="pos pos-coral fade" onclick="togglePos('mar')" role="button" tabindex="0" aria-expanded="false">
+        <span class="pos-glyph">♂</span>
+        <span class="pos-badge">Mars</span>
+        <h4>How you act</h4>
+        <div class="pos-detail">The action layer — drive, initiative, defense, sexuality. Mars shows how you start things, defend yourself, pursue desire, and turn motivation into movement.</div>
+        <div class="pos-hint">Tap to expand</div>
+      </div>
+    </div>
+
+    <div class="when-box fade">
+      <div class="when-label">Daily, not destiny</div>
+      <div class="when-text">Personal planets are active on a practical level. They influence routine decisions, social interactions, and immediate reactions. They shape the consistency of your behavior — meaning they are expressed continuously in everyday life rather than only in rare or significant events.</div>
+      <div class="signal-list">
+        <div class="signal-quote">"I always get my point across the same way…"</div>
+        <div class="signal-quote">"I'm always drawn to the same kind of person…"</div>
+        <div class="signal-quote">"I always lose my temper at the same trigger…"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     S4 DIVIDER · MERCURY
+     ════════════════════════════════════════════ -->
+<section id="mercury" class="div-block">
+  <span class="blob blob-cyan-right"></span>
+  <span class="blob blob-green-left"></span>
+  <div class="wrap">
+    <h2 class="fade">Mercury — how<br/>you think<br/>and speak</h2>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="fade">
+      <span class="eyebrow">Section 02 · Mercury</span>
+      <h3>The mental layer</h3>
+    </div>
+
+    <div class="planet-showcase">
+      <div class="planet-stage fade">
+        <div class="planet-orbit-ring r2"></div>
+        <div class="planet-orbit-ring"></div>
+        <div class="planet-big mercury-big">
+          <span class="glyph-symbol">☿</span>
+        </div>
+      </div>
+      <div class="planet-meta fade">
+        <div class="meta-line acc-1" onclick="toggleMeta(this)" data-pct="95" data-note="Pure Mercury home court. Almost nothing else in the chart owns *how* you think.">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Thinking style and mental processing</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">95%</span><span class="meta-note">Pure Mercury home court. Almost nothing else in the chart owns <em>how</em> you think.</span></div>
+          </div>
+        </div>
+        <div class="meta-line acc-2" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Communication and speech</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">92%</span><span class="meta-note">Words live here. Mercury sets your default verbal speed and shape.</span></div>
+          </div>
+        </div>
+        <div class="meta-line acc-3" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Writing and information handling</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">88%</span><span class="meta-note">Sorting, filing, transmitting. The remaining 12% belongs to the 3rd house.</span></div>
+          </div>
+        </div>
+        <div class="meta-line acc-4" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Learning and curiosity</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">85%</span><span class="meta-note">Mercury opens the question. Jupiter gives it scope.</span></div>
+          </div>
+        </div>
+        <div class="meta-line acc-5" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Logical reasoning and analysis</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">78%</span><span class="meta-note">Mercury structures the logic; Saturn enforces the rigor.</span></div>
+          </div>
+        </div>
+        <div class="meta-line acc-6" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Adaptation and flexibility in communication</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">82%</span><span class="meta-note">Mercury shape-shifts to the room. The Moon notices the mood underneath.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-box fade" style="margin-top:50px">
+      <div class="c-quote">Mercury is the messenger between experience and language.</div>
+      <div class="c-body">Mercury is connected to analysis, logic, and the ability to organize and transmit information. It reflects everyday communication — conversations, messages, learning, and decision-making based on facts. It is also a <em>neutral</em> planet: it does not describe attraction or partner type. It functions universally across all charts, focused on how a person understands and organizes reality through information exchange.</div>
+    </div>
+
+    <!-- EXAMPLES: Mercury in different signs/houses -->
+    <div class="ex-block fade">
+      <span class="eyebrow">Section 02 · Examples</span>
+      <p class="ex-q">If two people get the same news, why do they react with such different words?</p>
+
+      <div class="ex-grid">
+        <div class="ex-card art-cyan" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Gemini</span>
+            <span class="ex-emoji">💬</span>
+            <span class="ex-name">Mercury in Gemini</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Fast, multi-track, talkative.</strong> Mercury in Gemini shows fast thinking and multitasking in communication. Several thoughts run in parallel; conversation jumps between threads with curiosity and ease.</div>
+        </div>
+        <div class="ex-card art-gold" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Capricorn</span>
+            <span class="ex-emoji">🗂️</span>
+            <span class="ex-name">Mercury in Capricorn</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Structured, slower, organized.</strong> Mercury in Capricorn creates structured, slower, but more organized thinking. Words are chosen carefully; ideas are tested before they're spoken.</div>
+        </div>
+        <div class="ex-card art-magenta" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">3rd house</span>
+            <span class="ex-emoji">📡</span>
+            <span class="ex-name">Mercury in the 3rd</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Talkative, curious, information-driven.</strong> Mercury in the 3rd house often gives a very talkative, curious, and information-driven mindset. The mind is the main instrument of life — always asking, scanning, sharing.</div>
+        </div>
+      </div>
+
+      <button class="synth-btn" onclick="toggleSynth(this,'syn-mer')">
+        <span>See the through-line</span>
+        <span class="arr">→</span>
+      </button>
+      <div id="syn-mer" class="synth-box">
+        <p class="synth-text">Three different speeds of the same instrument. <em>Gemini</em> spreads thinking horizontally — many topics, light touch. <em>Capricorn</em> stacks it vertically — fewer topics, more weight. <em>Pisces</em> dissolves the lines and lets thinking become intuitive and less linear. None of these is "smarter." They are different operating systems for the same job: turning life into language.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     S5 DIVIDER · VENUS
+     ════════════════════════════════════════════ -->
+<section id="venus" class="div-block">
+  <span class="blob blob-gold-left"></span>
+  <div class="wrap">
+    <h2 class="fade">Venus — what<br/>you value<br/>and love</h2>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="fade">
+      <span class="eyebrow">Section 03 · Venus</span>
+      <h3>The relational layer</h3>
+    </div>
+
+    <div class="planet-showcase">
+      <div class="planet-stage fade">
+        <div class="planet-orbit-ring r2"></div>
+        <div class="planet-orbit-ring"></div>
+        <div class="planet-big venus-big">
+          <span class="glyph-symbol">♀</span>
+        </div>
+      </div>
+      <div class="planet-meta fade">
+        <div class="meta-line v-1" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Values and personal preferences</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">90%</span><span class="meta-note">Venus is what you say <em>yes</em> to before you can explain why.</span></div>
+          </div>
+        </div>
+        <div class="meta-line v-2" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Love and romantic relationships</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">70%</span><span class="meta-note">Venus draws you in; the Moon attaches; Mars activates the chase.</span></div>
+          </div>
+        </div>
+        <div class="meta-line v-3" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Attraction and relationship dynamics</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">75%</span><span class="meta-note">Venus chooses the <em>type</em>. Mars decides the <em>pace</em>.</span></div>
+          </div>
+        </div>
+        <div class="meta-line v-4" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Aesthetics, beauty, and style</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">95%</span><span class="meta-note">Pure Venus territory. Taste lives almost nowhere else.</span></div>
+          </div>
+        </div>
+        <div class="meta-line v-5" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Financial habits and material comfort</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">65%</span><span class="meta-note">Venus enjoys it; the 2nd house earns it; Jupiter expands it.</span></div>
+          </div>
+        </div>
+        <div class="meta-line v-6" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Harmony, diplomacy, and social behavior</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">85%</span><span class="meta-note">Venus smooths the edges. Libra placements amplify the instinct.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-box fade" style="margin-top:50px">
+      <div class="c-quote">Venus is the planet of "yes — this feels right."</div>
+      <div class="c-body">In practical life, Venus is connected to finances, relationship dynamics, and the ability to create harmony in the environment. It reflects what feels pleasant and emotionally satisfying. Venus is also a <em>gendered</em> planet: in a female chart it shows self-worth, values, and feminine expression. In a male chart it describes the type of woman he is attracted to and what he finds desirable in a partner.</div>
+    </div>
+
+    <!-- EXAMPLES: Venus in different signs/houses -->
+    <div class="ex-block fade">
+      <span class="eyebrow">Section 03 · Examples</span>
+      <p class="ex-q">Why does the same gesture of love feel romantic to one person and meaningless to another?</p>
+
+      <div class="ex-grid">
+        <div class="ex-card art-green" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Taurus</span>
+            <span class="ex-emoji">🌿</span>
+            <span class="ex-name">Venus in Taurus</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Stability, comfort, consistency.</strong> Venus in Taurus seeks stability, physical comfort, and consistency in relationships. Love is shown through presence, touch, food, and the steady reliability of being there.</div>
+        </div>
+        <div class="ex-card art-cyan" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Gemini</span>
+            <span class="ex-emoji">💌</span>
+            <span class="ex-name">Venus in Gemini</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Playful, curious, communicative.</strong> Venus in Gemini is more playful, curious, and values communication in love. Conversation, wit, and exchange of ideas feel like affection itself.</div>
+        </div>
+        <div class="ex-card art-gold" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Capricorn</span>
+            <span class="ex-emoji">🗝️</span>
+            <span class="ex-name">Venus in Capricorn</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Controlled, serious, responsible.</strong> Venus in Capricorn expresses love in a more controlled, serious, and responsible way. Loyalty, time, and effort over years are the real love language here.</div>
+        </div>
+      </div>
+
+      <button class="synth-btn" onclick="toggleSynth(this,'syn-ven')">
+        <span>See the through-line</span>
+        <span class="arr">→</span>
+      </button>
+      <div id="syn-ven" class="synth-box">
+        <p class="synth-text">Three different vocabularies of love. <em>Taurus</em> proves love through the body and continuity. <em>Gemini</em> proves it through words and shared curiosity. <em>Capricorn</em> proves it through commitment and time. Venus in the 2nd house often connects relationships and values strongly to material stability and financial security — a reminder that "what we love" and "what we build a life around" are the same conversation for Venus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     S6 DIVIDER · MARS
+     ════════════════════════════════════════════ -->
+<section id="mars" class="div-block">
+  <span class="blob blob-coral-right"></span>
+  <div class="wrap">
+    <h2 class="fade">Mars — how<br/>you act<br/>and pursue</h2>
+  </div>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="fade">
+      <span class="eyebrow">Section 04 · Mars</span>
+      <h3>The action layer</h3>
+    </div>
+
+    <div class="planet-showcase">
+      <div class="planet-stage fade">
+        <div class="planet-orbit-ring r2"></div>
+        <div class="planet-orbit-ring"></div>
+        <div class="planet-big mars-big">
+          <span class="glyph-symbol">♂</span>
+        </div>
+      </div>
+      <div class="planet-meta fade">
+        <div class="meta-line m-1" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Action, initiative, and drive</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">95%</span><span class="meta-note">Pure Mars. Nothing else in the chart starts the engine the way Mars does.</span></div>
+          </div>
+        </div>
+        <div class="meta-line m-2" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Energy, strength, and physical activity</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">88%</span><span class="meta-note">Mars is the body's raw power. The Sun gives it the will to use it.</span></div>
+          </div>
+        </div>
+        <div class="meta-line m-3" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Motivation and goal pursuit</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">75%</span><span class="meta-note">Mars provides the fuel; the Sun provides the direction.</span></div>
+          </div>
+        </div>
+        <div class="meta-line m-4" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Conflict, defense, and boundaries</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">92%</span><span class="meta-note">When the line is crossed, only Mars knows what to do — instantly.</span></div>
+          </div>
+        </div>
+        <div class="meta-line m-5" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Competition and survival instinct</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">90%</span><span class="meta-note">Mars is the planet that <em>moves first</em> under threat. Pluto adds the depth.</span></div>
+          </div>
+        </div>
+        <div class="meta-line m-6" onclick="toggleMeta(this)">
+          <span class="meta-dot"></span>
+          <div class="meta-body">
+            <div class="meta-head"><span class="meta-text">Sexual energy and bodily expression</span><span class="meta-toggle">Tap for %</span></div>
+            <div class="meta-reveal"><span class="meta-pct">85%</span><span class="meta-note">Mars is desire as <em>motion</em>. Venus is desire as <em>attraction</em>.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-box fade" style="margin-top:50px">
+      <div class="c-quote">Mars is desire turned into movement.</div>
+      <div class="c-body">Mars is connected to physical drive, movement, and survival instinct. It shows how energy is used in stressful situations and how a person expresses desire through action. Mars is also a <em>gendered</em> planet: in a male chart it describes drive, initiative, and masculine expression. In a female chart it describes the type of man she is attracted to — the qualities that activate desire and interest.</div>
+    </div>
+
+    <div class="ex-block fade">
+      <span class="eyebrow">Section 04 · Examples</span>
+      <p class="ex-q">Two people want the same thing. Why does one charge in and the other circle for weeks?</p>
+
+      <div class="ex-grid">
+        <div class="ex-card art-coral" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Aries</span>
+            <span class="ex-emoji">🔥</span>
+            <span class="ex-name">Mars in Aries</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Quick, direct, no hesitation.</strong> Mars in Aries acts quickly and directly, often without hesitation. Decision and motion are nearly the same gesture; conflict is met head-on.</div>
+        </div>
+        <div class="ex-card art-purple" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Scorpio</span>
+            <span class="ex-emoji">🜍</span>
+            <span class="ex-name">Mars in Scorpio</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Strategic, intense, controlled.</strong> Mars in Scorpio works more strategically and intensely, with controlled but powerful energy. Action is delayed only to make it more precise — and harder to stop once it begins.</div>
+        </div>
+        <div class="ex-card art-green" onclick="toggleCard(this)">
+          <div class="ex-art">
+            <span class="pos-badge">Taurus</span>
+            <span class="ex-emoji">🪨</span>
+            <span class="ex-name">Mars in Taurus</span>
+          </div>
+          <div class="ex-hint">Tap to reveal</div>
+          <div class="ex-info"><strong>Slow, consistent, enduring.</strong> Mars in Taurus acts slowly but consistently, with strong endurance. The energy is steady rather than explosive — and very hard to push off course.</div>
+        </div>
+      </div>
+
+      <button class="synth-btn" onclick="toggleSynth(this,'syn-mar')">
+        <span>See the through-line</span>
+        <span class="arr">→</span>
+      </button>
+      <div id="syn-mar" class="synth-box">
+        <p class="synth-text">Three different release valves for the same fuel. <em>Aries</em> spends Mars at the surface — fast, visible, immediate. <em>Scorpio</em> stores it underground — patient, exact, decisive. <em>Taurus</em> distributes it in long, slow waves — endurance over speed. Mars in the 1st house creates a very direct and physically expressive personality, while Mars in the 10th house often pushes a person toward ambition and competitive career behavior.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     S7 · PRACTICE LAB
+     ════════════════════════════════════════════ -->
+<section id="practice" class="div-block" style="padding:140px 0 40px">
+  <span class="blob blob-green-right"></span>
+  <div class="wrap">
+    <h2 class="fade">Now — make<br/>it yours.</h2>
+  </div>
+</section>
+
+<section class="sect" style="padding-top:30px">
+  <div class="wrap">
+    <div class="fade">
+      <span class="practice-tag">✦ Practice Lab</span>
+      <h3>Five labs to feel the planets in real life</h3>
+      <p class="lab-intro" style="margin-top:14px">Theory becomes useful only when it touches your week. Each lab below uses a different way of working — diagnosing, reflecting, building, pairing, sorting — so the planets stop being symbols and start being recognizable patterns in the lives around you.</p>
+    </div>
+
+    <!-- LAB 1: Decode the behavior -->
+    <div class="lab-block fade">
+      <span class="lab-num">Lab 01 · Diagnose</span>
+      <h3>Decode the behavior</h3>
+      <p class="lab-intro">Six everyday moments. Which planet is most active in each? There are no trick questions — these are clean signals. The point is to start noticing the planets <em>before</em> you start interpreting them.</p>
+
+      <div class="scenario-list" id="scenarios">
+        <div class="scenario" data-correct="mercury">
+          <p class="scenario-q">"He talked through the whole problem out loud, mapped three options on a napkin, and decided in seven minutes."</p>
+          <div class="scenario-options">
+            <button class="opt-btn" data-planet="mercury" onclick="answer(this)">Mercury</button>
+            <button class="opt-btn" data-planet="venus" onclick="answer(this)">Venus</button>
+            <button class="opt-btn" data-planet="mars" onclick="answer(this)">Mars</button>
+          </div>
+          <div class="scenario-feedback"><strong>Mercury.</strong> Verbal processing, mapping options, fast logical decision-making — this is Mercury's territory: turning a situation into language and making a call from the analysis.</div>
+        </div>
+
+        <div class="scenario" data-correct="venus">
+          <p class="scenario-q">"She redecorated her whole desk before starting the project — said she couldn't focus until the space felt right."</p>
+          <div class="scenario-options">
+            <button class="opt-btn" data-planet="mercury" onclick="answer(this)">Mercury</button>
+            <button class="opt-btn" data-planet="venus" onclick="answer(this)">Venus</button>
+            <button class="opt-btn" data-planet="mars" onclick="answer(this)">Mars</button>
+          </div>
+          <div class="scenario-feedback"><strong>Venus.</strong> Aesthetics, harmony, the need for the environment to feel pleasant before engaging — Venus governs taste and the conditions that make experience emotionally satisfying.</div>
+        </div>
+
+        <div class="scenario" data-correct="mars">
+          <p class="scenario-q">"The meeting got tense. He stood up, said exactly where the line was, and the room went quiet."</p>
+          <div class="scenario-options">
+            <button class="opt-btn" data-planet="mercury" onclick="answer(this)">Mercury</button>
+            <button class="opt-btn" data-planet="venus" onclick="answer(this)">Venus</button>
+            <button class="opt-btn" data-planet="mars" onclick="answer(this)">Mars</button>
+          </div>
+          <div class="scenario-feedback"><strong>Mars.</strong> Boundaries, defense, direct assertion under pressure. Mars shows how a person uses energy in stressful situations and how desire (here: to protect a line) becomes action.</div>
+        </div>
+
+        <div class="scenario" data-correct="venus">
+          <p class="scenario-q">"She kept the relationship going for years past its expiration date because the breakup felt ugly and she preferred peace."</p>
+          <div class="scenario-options">
+            <button class="opt-btn" data-planet="mercury" onclick="answer(this)">Mercury</button>
+            <button class="opt-btn" data-planet="venus" onclick="answer(this)">Venus</button>
+            <button class="opt-btn" data-planet="mars" onclick="answer(this)">Mars</button>
+          </div>
+          <div class="scenario-feedback"><strong>Venus.</strong> Harmony-seeking, diplomatic avoidance of conflict, attachment to what feels pleasant — classic Venus shadow side. Venus prefers smoothness, even at the cost of clarity.</div>
+        </div>
+
+        <div class="scenario" data-correct="mercury">
+          <p class="scenario-q">"She reads three articles, watches a 12-minute explainer, and texts her sister a five-bullet summary — all before lunch."</p>
+          <div class="scenario-options">
+            <button class="opt-btn" data-planet="mercury" onclick="answer(this)">Mercury</button>
+            <button class="opt-btn" data-planet="venus" onclick="answer(this)">Venus</button>
+            <button class="opt-btn" data-planet="mars" onclick="answer(this)">Mars</button>
+          </div>
+          <div class="scenario-feedback"><strong>Mercury.</strong> Curiosity, information handling, organization, transmission — Mercury at full speed. Notice how the act ends with sharing: Mercury is information <em>moving</em>, not just collected.</div>
+        </div>
+
+        <div class="scenario" data-correct="mars">
+          <p class="scenario-q">"He wanted the apartment, called the landlord twice the same morning, and showed up with a deposit before anyone else could view it."</p>
+          <div class="scenario-options">
+            <button class="opt-btn" data-planet="mercury" onclick="answer(this)">Mercury</button>
+            <button class="opt-btn" data-planet="venus" onclick="answer(this)">Venus</button>
+            <button class="opt-btn" data-planet="mars" onclick="answer(this)">Mars</button>
+          </div>
+          <div class="scenario-feedback"><strong>Mars.</strong> Initiative, pursuit, competitive instinct — desire turned into immediate motion. Mars is the planet that closes the gap between "I want this" and "I'm acting on it."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAB 2: Reflection mirror -->
+    <div class="lab-block fade">
+      <span class="lab-num">Lab 02 · Reflect</span>
+      <h3>The mirror — your own week</h3>
+      <p class="lab-intro">Read each prompt, sit with it for a moment, then tap the card to see how the planet would interpret it. Your honest answer matters more than the "right" one.</p>
+
+      <div class="mirror-grid">
+        <div class="mirror-card m-mercury" onclick="flipMirror(this)">
+          <div class="mirror-icon"></div>
+          <h4>Mercury · This week</h4>
+          <p class="mirror-prompt">Think of one conversation that went unusually well — or unusually badly. Replay the first 30 seconds in your mind.</p>
+          <div class="mirror-reveal">Notice the <strong>speed</strong>, the <strong>vocabulary</strong>, and how much you were translating vs. reacting. That gap — between the experience and the language you found for it — is where Mercury lives. People with similar Mercury placements tend to fail and succeed in the same conversational shapes again and again.</div>
+          <div class="mirror-tap">Tap to reveal interpretation</div>
+        </div>
+
+        <div class="mirror-card m-venus" onclick="flipMirror(this)">
+          <div class="mirror-icon"></div>
+          <h4>Venus · This week</h4>
+          <p class="mirror-prompt">Recall one moment this week when something — a person, a place, a small object — made you think "yes, this is mine."</p>
+          <div class="mirror-reveal">That involuntary "yes" is your Venus signature. Pay attention to <strong>what triggered it</strong>: was it texture, conversation, beauty, loyalty, status, peace? Venus repeats. The same kind of "yes" will return — in love, in money, in the room you choose to live in.</div>
+          <div class="mirror-tap">Tap to reveal interpretation</div>
+        </div>
+
+        <div class="mirror-card m-mars" onclick="flipMirror(this)">
+          <div class="mirror-icon"></div>
+          <h4>Mars · This week</h4>
+          <p class="mirror-prompt">Find one moment when something made you angry, frustrated, or impatient — even mildly. What was the very first impulse?</p>
+          <div class="mirror-reveal">That first impulse — speak fast, withdraw, push back, leave, stay and burn — is your Mars default. Mars is most honest in the second before you correct yourself. Track this for a week and you will see the same shape of response repeating; that shape is the planet.</div>
+          <div class="mirror-tap">Tap to reveal interpretation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAB 3: Build your trio -->
+    <div class="lab-block fade">
+      <span class="lab-num">Lab 03 · Construct</span>
+      <h3>Build a personality from three planets</h3>
+      <p class="lab-intro">Pick one trait per planet. As you choose, the synthesis at the bottom builds itself — showing how Mercury, Venus, and Mars combine into one recognizable everyday character. Try different combinations and watch the personality shift.</p>
+
+      <div class="trio-builder">
+        <div class="trio-col trio-mer">
+          <h4>Mercury</h4>
+          <div class="trio-sub">How they think</div>
+          <div class="trio-options">
+            <button class="trio-opt" data-axis="mer" data-key="fast" onclick="pickTrio(this)">Fast & verbal · jumps between topics</button>
+            <button class="trio-opt" data-axis="mer" data-key="slow" onclick="pickTrio(this)">Slow & structured · weighs each word</button>
+            <button class="trio-opt" data-axis="mer" data-key="intuitive" onclick="pickTrio(this)">Intuitive · thinks in images, not lines</button>
+          </div>
+        </div>
+        <div class="trio-col trio-ven">
+          <h4>Venus</h4>
+          <div class="trio-sub">What they value</div>
+          <div class="trio-options">
+            <button class="trio-opt" data-axis="ven" data-key="stable" onclick="pickTrio(this)">Stability, comfort, the body</button>
+            <button class="trio-opt" data-axis="ven" data-key="playful" onclick="pickTrio(this)">Conversation, novelty, wit</button>
+            <button class="trio-opt" data-axis="ven" data-key="serious" onclick="pickTrio(this)">Loyalty, status, time invested</button>
+          </div>
+        </div>
+        <div class="trio-col trio-mar">
+          <h4>Mars</h4>
+          <div class="trio-sub">How they act</div>
+          <div class="trio-options">
+            <button class="trio-opt" data-axis="mar" data-key="direct" onclick="pickTrio(this)">Direct, fast, head-on</button>
+            <button class="trio-opt" data-axis="mar" data-key="strategic" onclick="pickTrio(this)">Strategic, intense, controlled</button>
+            <button class="trio-opt" data-axis="mar" data-key="enduring" onclick="pickTrio(this)">Slow, steady, hard to stop</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="trio-result" class="trio-result empty">
+        <div class="trio-headline">Pick one trait in each column to assemble a personality…</div>
+      </div>
+    </div>
+
+    <!-- LAB 4: Venus & Mars dynamics -->
+    <div class="lab-block fade">
+      <span class="lab-num">Lab 04 · Pair</span>
+      <h3>Venus attracts. Mars activates.</h3>
+      <p class="lab-intro">Venus describes what we are drawn to and how we relate emotionally. Mars describes how desire becomes action. Together they explain how relationships actually start and develop. Click a Venus signal on the left, then click the Mars response on the right that completes the pair. You're matching <em>attraction</em> with <em>activation</em>.</p>
+
+      <div class="pair-grid">
+        <div class="pair-side pair-v">
+          <h4>Venus signal — what attracts</h4>
+          <div class="pair-list" id="pair-v-list">
+            <div class="pair-chip" data-key="v1" onclick="pickPair(this,'v')">Drawn to calm, beautiful environments and slow attention</div>
+            <div class="pair-chip" data-key="v2" onclick="pickPair(this,'v')">Drawn to wit, conversation, and people who keep them curious</div>
+            <div class="pair-chip" data-key="v3" onclick="pickPair(this,'v')">Drawn to commitment, depth, and partners with weight behind their words</div>
+          </div>
+        </div>
+        <div class="pair-side pair-m">
+          <h4>Mars response — how desire moves</h4>
+          <div class="pair-list" id="pair-m-list">
+            <div class="pair-chip" data-key="m1" onclick="pickPair(this,'m')">Builds the relationship slowly, through repeated steady gestures</div>
+            <div class="pair-chip" data-key="m2" onclick="pickPair(this,'m')">Pursues with directness, asks for what they want without delay</div>
+            <div class="pair-chip" data-key="m3" onclick="pickPair(this,'m')">Acts strategically — long timing, then a decisive move</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pair-output" class="pair-output">Match a Venus signal with the Mars response that completes it.</div>
+      <div class="pair-progress" id="pair-progress">0 / 3 pairs found</div>
+    </div>
+
+    <!-- LAB 5: Drag & drop -->
+    <div class="lab-block fade">
+      <span class="lab-num">Lab 05 · Sort</span>
+      <h3>Drag each statement onto its planet</h3>
+      <p class="lab-intro">Seven everyday statements are sitting in the pool below. Each belongs to one planet. Drag the chip onto the planet that owns the behavior — wrong drops bounce back; right drops settle in and start to glow.</p>
+
+      <div id="drop-pool" class="drop-pool">
+        <span class="drop-pool-label">Statements pool</span>
+        <div class="drag-chip" draggable="true" data-planet="mercury" id="chip-1">"I think out loud — talking helps me decide"</div>
+        <div class="drag-chip" draggable="true" data-planet="mercury" id="chip-2">"I always reread my own messages before sending"</div>
+        <div class="drag-chip" draggable="true" data-planet="mercury" id="chip-3">"I learn fastest by explaining a thing to someone else"</div>
+        <div class="drag-chip" draggable="true" data-planet="venus" id="chip-4">"I'd choose the prettier kitchen over the larger one"</div>
+        <div class="drag-chip" draggable="true" data-planet="venus" id="chip-5">"I'd rather avoid the conflict than win the point"</div>
+        <div class="drag-chip" draggable="true" data-planet="mars" id="chip-6">"When the line is crossed, I name it on the spot"</div>
+        <div class="drag-chip" draggable="true" data-planet="mars" id="chip-7">"I want a thing — within an hour I've taken the first step"</div>
+      </div>
+
+      <div class="drop-targets">
+        <div class="drop-zone zone-mercury" data-planet="mercury">
+          <div class="zone-planet"><span class="glyph-symbol">☿</span></div>
+          <h4>Mercury</h4>
+          <div class="zone-sub">Thinking · speaking</div>
+          <div class="zone-list" id="zone-mercury"></div>
+        </div>
+        <div class="drop-zone zone-venus" data-planet="venus">
+          <div class="zone-planet"><span class="glyph-symbol">♀</span></div>
+          <h4>Venus</h4>
+          <div class="zone-sub">Values · attraction</div>
+          <div class="zone-list" id="zone-venus"></div>
+        </div>
+        <div class="drop-zone zone-mars" data-planet="mars">
+          <div class="zone-planet"><span class="glyph-symbol">♂</span></div>
+          <h4>Mars</h4>
+          <div class="zone-sub">Action · drive</div>
+          <div class="zone-list" id="zone-mars"></div>
+        </div>
+      </div>
+
+      <div id="drop-feedback" class="drop-feedback">Drag a statement onto a planet…</div>
+      <div class="drop-progress" id="drop-progress">0 / 7 placed</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     CONVERGENCE — three planets, one soul
+     ════════════════════════════════════════════ -->
+<section id="convergence">
+  <span class="blob blob-purple-r" style="opacity:.18;width:600px;height:600px"></span>
+  <div class="wrap">
+    <div class="conv-intro fade">
+      <span class="practice-tag">✦ The convergence</span>
+      <h2>Three planets.<br/>One soul.</h2>
+      <p class="conv-lead">
+        Mercury sharpens the mind. Venus opens the heart. Mars moves the body. Three planets, three layers, three different sectors of life — but they meet in only one place: <em>you</em>.
+      </p>
+    </div>
+
+    <div class="convergence-stage fade">
+      <svg class="convergence-svg" viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" aria-label="Three planets converging into the soul">
+        <defs>
+          <radialGradient id="soulGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="18%" stop-color="#f0ebe0" stop-opacity=".9"/>
+            <stop offset="50%" stop-color="#7B6FE8" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#7B6FE8" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="mercGrad" cx="32%" cy="30%" r="80%">
+            <stop offset="0%" stop-color="#f6c5ff"/>
+            <stop offset="40%" stop-color="#d465ee"/>
+            <stop offset="100%" stop-color="#3e0e57"/>
+          </radialGradient>
+          <radialGradient id="venGrad" cx="32%" cy="30%" r="80%">
+            <stop offset="0%" stop-color="#fff8d4"/>
+            <stop offset="40%" stop-color="#f4c875"/>
+            <stop offset="100%" stop-color="#5a3c10"/>
+          </radialGradient>
+          <radialGradient id="marsGrad" cx="32%" cy="30%" r="80%">
+            <stop offset="0%" stop-color="#ffd5c5"/>
+            <stop offset="40%" stop-color="#ff7a5a"/>
+            <stop offset="100%" stop-color="#4a0f04"/>
+          </radialGradient>
+
+          <linearGradient id="streamMerc" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#E040FB" stop-opacity=".85"/>
+            <stop offset="60%" stop-color="#9b53d8" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#7B6FE8" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="streamVen" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#FFD54F" stop-opacity=".85"/>
+            <stop offset="60%" stop-color="#c9a356" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#7B6FE8" stop-opacity=".15"/>
+          </linearGradient>
+          <linearGradient id="streamMars" x1="50%" y1="100%" x2="50%" y2="0%">
+            <stop offset="0%" stop-color="#E8604C" stop-opacity=".85"/>
+            <stop offset="60%" stop-color="#b45580" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#7B6FE8" stop-opacity=".15"/>
+          </linearGradient>
+
+          <filter id="cometBlur" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3.5"/>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2"/>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background sparks -->
+        <circle class="bg-spark" cx="80" cy="380" r="1.5" fill="#FFD54F" style="animation-delay:.2s"/>
+        <circle class="bg-spark" cx="820" cy="420" r="1.5" fill="#E040FB" style="animation-delay:.7s"/>
+        <circle class="bg-spark" cx="200" cy="510" r="1.2" fill="#4FC3F7" style="animation-delay:1.4s"/>
+        <circle class="bg-spark" cx="700" cy="510" r="1.2" fill="#6FFFB0" style="animation-delay:2.1s"/>
+        <circle class="bg-spark" cx="450" cy="60" r="1.5" fill="#f0ebe0" style="animation-delay:1s"/>
+        <circle class="bg-spark" cx="120" cy="220" r="1" fill="#f0ebe0" style="animation-delay:1.7s"/>
+        <circle class="bg-spark" cx="780" cy="240" r="1" fill="#f0ebe0" style="animation-delay:2.4s"/>
+
+        <!-- Soul expanding rings (SMIL native, no transform-origin issues) -->
+        <circle cx="450" cy="320" r="40" fill="none" stroke="#7B6FE8" stroke-width="1.5" opacity="0">
+          <animate attributeName="r" values="40;180" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".7;0" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-width" values="2;.3" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="450" cy="320" r="40" fill="none" stroke="#E040FB" stroke-width="1.5" opacity="0">
+          <animate attributeName="r" values="40;180" dur="4s" begin="1.3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".5;0" dur="4s" begin="1.3s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-width" values="2;.3" dur="4s" begin="1.3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="450" cy="320" r="40" fill="none" stroke="#FFD54F" stroke-width="1.5" opacity="0">
+          <animate attributeName="r" values="40;180" dur="4s" begin="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".5;0" dur="4s" begin="2.6s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-width" values="2;.3" dur="4s" begin="2.6s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Streams (curved bezier paths from each planet to the soul) -->
+        <path id="path-merc" class="stream" d="M 140 130 Q 280 230 450 320" stroke="url(#streamMerc)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path id="path-ven" class="stream" d="M 760 130 Q 620 230 450 320" stroke="url(#streamVen)" stroke-width="2.2" fill="none" stroke-linecap="round" style="animation-delay:.7s"/>
+        <path id="path-mars" class="stream" d="M 450 540 Q 450 430 450 320" stroke="url(#streamMars)" stroke-width="2.2" fill="none" stroke-linecap="round" style="animation-delay:1s"/>
+
+        <!-- Comets traveling along streams -->
+        <circle r="4.5" fill="#E040FB" filter="url(#cometBlur)">
+          <animateMotion dur="2.8s" repeatCount="indefinite">
+            <mpath href="#path-merc"/>
+          </animateMotion>
+        </circle>
+        <circle r="3" fill="#f5b7ff" filter="url(#cometBlur)">
+          <animateMotion dur="2.8s" begin="1s" repeatCount="indefinite">
+            <mpath href="#path-merc"/>
+          </animateMotion>
+        </circle>
+        <circle r="2" fill="#fff" filter="url(#cometBlur)">
+          <animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite">
+            <mpath href="#path-merc"/>
+          </animateMotion>
+        </circle>
+
+        <circle r="4.5" fill="#FFD54F" filter="url(#cometBlur)">
+          <animateMotion dur="3.2s" begin=".4s" repeatCount="indefinite">
+            <mpath href="#path-ven"/>
+          </animateMotion>
+        </circle>
+        <circle r="3" fill="#fff4cf" filter="url(#cometBlur)">
+          <animateMotion dur="3.2s" begin="1.6s" repeatCount="indefinite">
+            <mpath href="#path-ven"/>
+          </animateMotion>
+        </circle>
+        <circle r="2" fill="#fff" filter="url(#cometBlur)">
+          <animateMotion dur="3.2s" begin="2.4s" repeatCount="indefinite">
+            <mpath href="#path-ven"/>
+          </animateMotion>
+        </circle>
+
+        <circle r="4.5" fill="#E8604C" filter="url(#cometBlur)">
+          <animateMotion dur="3s" begin=".8s" repeatCount="indefinite">
+            <mpath href="#path-mars"/>
+          </animateMotion>
+        </circle>
+        <circle r="3" fill="#ffb8a3" filter="url(#cometBlur)">
+          <animateMotion dur="3s" begin="2s" repeatCount="indefinite">
+            <mpath href="#path-mars"/>
+          </animateMotion>
+        </circle>
+        <circle r="2" fill="#fff" filter="url(#cometBlur)">
+          <animateMotion dur="3s" begin="2.6s" repeatCount="indefinite">
+            <mpath href="#path-mars"/>
+          </animateMotion>
+        </circle>
+
+        <!-- Soul aura -->
+        <circle class="soul-aura" cx="450" cy="320" r="130" fill="url(#soulGrad)"/>
+        <!-- Soul core -->
+        <circle class="soul-core" cx="450" cy="320" r="22" fill="#ffffff"/>
+
+        <!-- Three planets -->
+        <g>
+          <circle class="svg-planet p-mercury" cx="140" cy="130" r="38" fill="url(#mercGrad)" filter="url(#softGlow)"/>
+          <text x="140" y="139" text-anchor="middle" fill="#fff" font-size="22" font-family="'Segoe UI Symbol','Apple Symbols',serif" pointer-events="none">☿</text>
+        </g>
+        <g>
+          <circle class="svg-planet p-venus" cx="760" cy="130" r="42" fill="url(#venGrad)" filter="url(#softGlow)"/>
+          <text x="760" y="142" text-anchor="middle" fill="#fff" font-size="28" font-family="'Segoe UI Symbol','Apple Symbols',serif" pointer-events="none">♀</text>
+        </g>
+        <g>
+          <circle class="svg-planet p-mars" cx="450" cy="540" r="40" fill="url(#marsGrad)" filter="url(#softGlow)"/>
+          <text x="450" y="551" text-anchor="middle" fill="#fff" font-size="26" font-family="'Segoe UI Symbol','Apple Symbols',serif" pointer-events="none">♂</text>
+        </g>
+
+        <!-- Labels: bold caps first, italic sublabel underneath (same pattern for all 3 planets) -->
+        <g class="conv-label" font-size="13">
+          <text x="140" y="200" text-anchor="middle" fill="#E040FB">M I N D</text>
+          <text x="760" y="200" text-anchor="middle" fill="#FFD54F">H E A R T</text>
+          <text x="450" y="608" text-anchor="middle" fill="#E8604C">W I L L</text>
+        </g>
+        <g class="conv-sublabel" font-size="12" fill="rgba(240,235,224,0.55)">
+          <text x="140" y="220" text-anchor="middle">how you think</text>
+          <text x="760" y="220" text-anchor="middle">what you love</text>
+          <text x="450" y="628" text-anchor="middle">how you act</text>
+        </g>
+
+        <!-- Soul label -->
+        <g font-family="'Lora',serif">
+          <text x="450" y="245" text-anchor="middle" fill="#ffffff" font-size="14" letter-spacing="6" font-style="italic" opacity=".95">SOUL</text>
+          <text x="450" y="408" text-anchor="middle" fill="rgba(240,235,224,0.6)" font-size="12" font-style="italic">where they meet</text>
+        </g>
+      </svg>
+    </div>
+
+    <p class="conv-coda fade">
+      The chart maps the layers.<br/>
+      <em>You</em> are the place where they meet.
+    </p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  Nebula Academy · Personal Planets · Mercury · Venus · Mars
+</footer>
+
+<script>
+/* ════════════════════════════════════════════
+   1. Smooth scroll
+   ════════════════════════════════════════════ */
+function goToSection(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ════════════════════════════════════════════
+   1b. Toggle planet meta-lines (% reveal with count-up)
+   ════════════════════════════════════════════ */
+function toggleMeta(el){
+  const open = el.classList.toggle('open');
+  const toggle = el.querySelector('.meta-toggle');
+  const pctEl = el.querySelector('.meta-pct');
+  if(toggle) toggle.textContent = open ? 'Tap to hide' : 'Tap for %';
+  if(open && pctEl && !pctEl.dataset.animated){
+    const target = parseInt(pctEl.textContent, 10);
+    if(!isNaN(target)){
+      pctEl.dataset.animated = '1';
+      let v = 0;
+      const dur = 700;
+      const start = performance.now();
+      function step(ts){
+        const t = Math.min(1, (ts - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        v = Math.round(target * eased);
+        pctEl.textContent = v + '%';
+        if(t < 1) requestAnimationFrame(step);
+        else pctEl.textContent = target + '%';
+      }
+      requestAnimationFrame(step);
+    }
+  }
+}
+
+/* ════════════════════════════════════════════
+   2. Toggle pos cards (Three planets, one personality)
+   ════════════════════════════════════════════ */
+function togglePos(id){
+  const el = document.getElementById('pos-'+id);
+  if(!el) return;
+  const open = el.classList.toggle('open');
+  el.setAttribute('aria-expanded', open ? 'true' : 'false');
+  const hint = el.querySelector('.pos-hint');
+  if(hint) hint.textContent = open ? 'Tap to collapse' : 'Tap to expand';
+}
+
+/* ════════════════════════════════════════════
+   3. Toggle example cards (signs of each planet)
+   ════════════════════════════════════════════ */
+function toggleCard(el){
+  const open = el.classList.toggle('open');
+  const hint = el.querySelector('.ex-hint');
+  if(hint) hint.textContent = open ? 'Tap to close' : 'Tap to reveal';
+}
+
+/* ════════════════════════════════════════════
+   4. Toggle synthesis box
+   ════════════════════════════════════════════ */
+function toggleSynth(btn, synId){
+  const box = document.getElementById(synId);
+  if(!box) return;
+  const visible = box.classList.toggle('vis');
+  btn.classList.toggle('shown', visible);
+  const span = btn.querySelector('span:first-child');
+  if(span) span.textContent = visible ? 'Hide synthesis' : 'See the through-line';
+}
+
+/* ════════════════════════════════════════════
+   5. IntersectionObserver — fade in
+   ════════════════════════════════════════════ */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.10});
+document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+
+/* ════════════════════════════════════════════
+   6. Side-nav active dot on scroll
+   ════════════════════════════════════════════ */
+const sectionIds = ['hero','overview','what-are','mercury','venus','mars','practice'];
+const dots = document.querySelectorAll('.side-nav button');
+function updateNav(){
+  let activeIdx = 0;
+  const fromTop = window.scrollY + window.innerHeight*0.4;
+  sectionIds.forEach((id,i)=>{
+    const el = document.getElementById(id);
+    if(el && el.offsetTop <= fromTop) activeIdx = i;
+  });
+  dots.forEach((d,i)=>d.classList.toggle('on', i===activeIdx));
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+window.addEventListener('load', updateNav);
+
+/* ════════════════════════════════════════════
+   7. Lab 1 — Decode the Behavior
+   ════════════════════════════════════════════ */
+function answer(btn){
+  const scenario = btn.closest('.scenario');
+  if(!scenario || scenario.classList.contains('solved')) return;
+  const correct = scenario.dataset.correct;
+  const planet = btn.dataset.planet;
+  const opts = scenario.querySelectorAll('.opt-btn');
+  opts.forEach(o=>o.classList.add('locked'));
+  if(planet === correct){
+    btn.classList.add('correct');
+    scenario.classList.add('solved');
+  } else {
+    btn.classList.add('wrong');
+    // also reveal which is correct
+    opts.forEach(o=>{
+      if(o.dataset.planet === correct) o.classList.add('correct');
+    });
+    scenario.classList.add('solved');
+  }
+}
+
+/* ════════════════════════════════════════════
+   8. Lab 2 — Mirror reflection
+   ════════════════════════════════════════════ */
+function flipMirror(card){
+  const flipped = card.classList.toggle('flipped');
+  const tap = card.querySelector('.mirror-tap');
+  if(tap) tap.textContent = flipped ? 'Tap to hide' : 'Tap to reveal interpretation';
+}
+
+/* ════════════════════════════════════════════
+   9. Lab 3 — Build your trio
+   ════════════════════════════════════════════ */
+const trioState = {mer:null, ven:null, mar:null};
+
+const trioPhrases = {
+  mer: {
+    fast: 'thinks fast and out loud — many threads, light touch',
+    slow: 'thinks slowly and structurally — fewer threads, more weight',
+    intuitive: 'thinks in images and impressions — less linear, more atmospheric'
+  },
+  ven: {
+    stable: 'values stability, comfort, and the body',
+    playful: 'values novelty, conversation, and shared curiosity',
+    serious: 'values loyalty, status, and time invested'
+  },
+  mar: {
+    direct: 'and acts directly — fast, head-on, no delay',
+    strategic: 'and acts strategically — patient, then decisive',
+    enduring: 'and acts steadily — slow, hard to push off course'
+  }
+};
+
+const trioVibes = {
+  'fast|stable|direct': 'A quick, comfort-loving operator. Talks first, settles in fast, moves on impulse — but always returns to the safe chair.',
+  'fast|stable|strategic': 'A talkative observer who prefers stable ground and waits for the right moment to make a move that sticks.',
+  'fast|stable|enduring': 'Light in conversation, deep in habit. Many words, few real changes — and the few that come, stay.',
+  'fast|playful|direct': 'Pure motion. A social, curious, fast-acting personality that thrives on novelty and rarely sits still.',
+  'fast|playful|strategic': 'Charming on the surface, calculating underneath. Conversation is the cover, the real move comes later.',
+  'fast|playful|enduring': 'A connector with stamina. Talks easily, befriends widely, then quietly outlasts everyone in the room.',
+  'fast|serious|direct': 'Articulate ambition. Knows what they want, names it clearly, and chases it without flinching.',
+  'fast|serious|strategic': 'A persuasive strategist. Builds the case in words, plays the long game in action.',
+  'fast|serious|enduring': 'A patient negotiator. Talks the room into agreement, then anchors the result for years.',
+  'slow|stable|direct': 'Quiet and grounded, but suddenly decisive. The kind of person who says little, then acts faster than anyone expected.',
+  'slow|stable|strategic': 'A steady mind playing the long game. Few words, careful taste, deliberate moves — the slow river that wears down the rock.',
+  'slow|stable|enduring': 'Deep stability. Slow to start, almost impossible to redirect once moving. Builds a life by accumulation.',
+  'slow|playful|direct': 'A measured thinker with a warm aesthetic and a sharp move. Looks softer than they actually are.',
+  'slow|playful|strategic': 'Considers everything, charms most people, picks one timing perfectly. Often underestimated.',
+  'slow|playful|enduring': 'Thoughtful taste, durable presence. The kind of person whose decisions look small until you see them years later.',
+  'slow|serious|direct': 'Classic builder of empires. Thinks long, values commitment, acts decisively when the line is drawn.',
+  'slow|serious|strategic': 'The architect personality. Slow planning, deep loyalties, surgical action. Rarely loses what they decide to keep.',
+  'slow|serious|enduring': 'Solid as foundation stone. Slow, loyal, relentless. Builds slowly and never lets go.',
+  'intuitive|stable|direct': 'Senses what is needed and moves on it without explaining. Comfort-loving, but unexpectedly decisive.',
+  'intuitive|stable|strategic': 'A dreamer with grounded taste and quiet timing. Looks gentle, plays a long game.',
+  'intuitive|stable|enduring': 'Instinct, comfort, and stamina. Drifts toward what feels right and stays with it for decades.',
+  'intuitive|playful|direct': 'Imaginative, social, impulsive. Lives by feeling the room and acting on the first true impulse.',
+  'intuitive|playful|strategic': 'A storyteller with timing. Reads people, charms them, and chooses the exact moment to move.',
+  'intuitive|playful|enduring': 'A romantic with stamina. Lives in atmosphere, loves widely, stays where the feeling holds.',
+  'intuitive|serious|direct': 'Deep instincts, serious values, fast hands. The protector personality — senses the threat early and acts.',
+  'intuitive|serious|strategic': 'Quietly intense. Knows what matters, waits for the moment, moves with precision. Often misread as passive.',
+  'intuitive|serious|enduring': 'A devoted sensitive. Slow to choose, almost incapable of leaving once chosen. The deep-still-water personality.'
+};
+
+function pickTrio(btn){
+  const axis = btn.dataset.axis;
+  const key = btn.dataset.key;
+  const col = btn.closest('.trio-col');
+  col.querySelectorAll('.trio-opt').forEach(o=>o.classList.remove('selected'));
+  btn.classList.add('selected');
+  trioState[axis] = key;
+  renderTrio();
+}
+
+function renderTrio(){
+  const out = document.getElementById('trio-result');
+  if(!trioState.mer || !trioState.ven || !trioState.mar){
+    out.classList.remove('full');
+    out.classList.add('empty');
+    const filled = ['mer','ven','mar'].filter(k=>trioState[k]).length;
+    out.innerHTML = '<div class="trio-headline">'+
+      (filled===0
+        ? 'Pick one trait in each column to assemble a personality…'
+        : (filled===1 ? 'Two more to go — keep choosing.' : 'One more — pick the last one.'))
+      +'</div>';
+    return;
+  }
+  const key = trioState.mer + '|' + trioState.ven + '|' + trioState.mar;
+  const phrase = `Mercury ${trioPhrases.mer[trioState.mer]}. Venus ${trioPhrases.ven[trioState.ven]} — ${trioPhrases.mar[trioState.mar]}.`;
+  const vibe = trioVibes[key] || 'A unique combination — three planets pulling in different directions, which is true of most real people.';
+  out.classList.remove('empty');
+  out.classList.add('full');
+  out.innerHTML = '<div class="trio-headline"><em>The portrait:</em> ' + vibe + '<br/><br/><span style="font-size:.92rem;color:var(--cream-70);font-style:normal;font-family:Questrial,sans-serif">' + phrase + '</span></div>';
+}
+
+/* ════════════════════════════════════════════
+   11. Lab 5 — Drag & drop sort
+   ════════════════════════════════════════════ */
+let dragChip = null;
+let placedCount = 0;
+const totalChips = 7;
+
+const planetNames = {mercury:'Mercury', venus:'Venus', mars:'Mars'};
+const planetMicroFeedback = {
+  mercury:'Mercury — thinking and language. Yes.',
+  venus:'Venus — values and pleasantness. Yes.',
+  mars:'Mars — initiative and action. Yes.'
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const chips = document.querySelectorAll('.drag-chip');
+  const zones = document.querySelectorAll('.drop-zone');
+  const pool = document.getElementById('drop-pool');
+
+  chips.forEach(chip => {
+    chip.addEventListener('dragstart', e => {
+      if(chip.classList.contains('placed')) { e.preventDefault(); return; }
+      dragChip = chip;
+      chip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', chip.id);
+    });
+    chip.addEventListener('dragend', () => {
+      if(dragChip) dragChip.classList.remove('dragging');
+      dragChip = null;
+    });
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      zone.classList.add('over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('over');
+      if(!dragChip) return;
+      const chipPlanet = dragChip.dataset.planet;
+      const zonePlanet = zone.dataset.planet;
+      const fb = document.getElementById('drop-feedback');
+      if(chipPlanet === zonePlanet){
+        // success
+        const list = document.getElementById('zone-' + zonePlanet);
+        dragChip.classList.add('placed');
+        dragChip.setAttribute('draggable', 'false');
+        list.appendChild(dragChip);
+        placedCount++;
+        document.getElementById('drop-progress').textContent = placedCount + ' / ' + totalChips + ' placed';
+        fb.className = 'drop-feedback success';
+        fb.textContent = planetMicroFeedback[zonePlanet];
+        if(placedCount === totalChips){
+          setTimeout(()=>{
+            fb.textContent = 'All seven sorted. Notice the pattern: each planet owns a different layer of the same person — thought, value, action.';
+          }, 1200);
+        }
+      } else {
+        // wrong — bounce back
+        dragChip.classList.add('shake');
+        const wrong = dragChip;
+        setTimeout(()=>wrong.classList.remove('shake'), 500);
+        fb.className = 'drop-feedback error';
+        fb.textContent = 'Not ' + planetNames[zonePlanet] + ' — try another planet.';
+      }
+    });
+  });
+});
+/* ════════════════════════════════════════════
+   10. Lab 4 — Venus / Mars matching
+   ════════════════════════════════════════════ */
+const correctPairs = {
+  'v1':'m1', // calm/beauty -> slow steady gestures
+  'v2':'m2', // wit/curiosity -> directness
+  'v3':'m3'  // commitment/depth -> strategic decisive
+};
+const pairExplain = {
+  'v1|m1': 'Venus is drawn to calm and beauty; Mars expresses that desire through patient, repeated, steady acts. The relationship grows by accumulation.',
+  'v2|m2': 'Venus is attracted to wit and exchange; Mars meets that with directness — asking, offering, naming desire without delay. Both move fast, both stay light.',
+  'v3|m3': 'Venus values commitment and depth; Mars matches with strategic patience — long timing, then a decisive move that signals: I am all in.'
+};
+
+let pairSelected = {v:null, m:null};
+let pairsFound = 0;
+
+function pickPair(chip, side){
+  if(chip.classList.contains('matched')) return;
+  // clear previous selection on same side
+  document.querySelectorAll('#pair-'+side+'-list .pair-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  pairSelected[side] = chip.dataset.key;
+  if(pairSelected.v && pairSelected.m){
+    evalPair();
+  }
+}
+
+function evalPair(){
+  const out = document.getElementById('pair-output');
+  const v = pairSelected.v;
+  const m = pairSelected.m;
+  if(correctPairs[v] === m){
+    // success
+    document.querySelector('#pair-v-list .pair-chip[data-key="'+v+'"]').classList.add('matched');
+    document.querySelector('#pair-m-list .pair-chip[data-key="'+m+'"]').classList.add('matched');
+    document.querySelectorAll('.pair-chip.active').forEach(c=>c.classList.remove('active'));
+    out.classList.add('success');
+    out.textContent = pairExplain[v+'|'+m];
+    pairsFound++;
+    document.getElementById('pair-progress').textContent = pairsFound + ' / 3 pairs found';
+    pairSelected = {v:null, m:null};
+    if(pairsFound === 3){
+      setTimeout(()=>{
+        out.textContent = 'All three found. Notice the pattern: Venus says what attracts; Mars decides how it moves. Together they describe how partnership energy is experienced and expressed.';
+      }, 2200);
+    }
+  } else {
+    out.classList.remove('success');
+    out.textContent = 'Not quite — try a different Mars response for that Venus signal.';
+    setTimeout(()=>{
+      document.querySelectorAll('.pair-chip.active').forEach(c=>c.classList.remove('active'));
+      pairSelected = {v:null, m:null};
+    }, 1100);
+  }
+}
+
+</script>
+</body>
+</html>
